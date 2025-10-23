@@ -1,35 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cuenta</title>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Crear Nueva Cuenta</h1>
-        
-        <form action="{{ route('accounts.store') }}" method="POST">
-            @csrf
+@extends('layouts.app')
 
-            <div class="mb-3 row">
-                <div class="col-md-6">
-                    <label for="code" class="form-label">Código</label>
-                    <input type="text" name="code" id="code" class="form-control" value="{{ old('code') }}" required placeholder="0-0-00-00-00-00-00">
-                    @error('code')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+@section('title', 'Crear Nueva Cuenta')
 
-                <div class="col-md-6">
-                    <label for="description" class="form-label">Descripción</label>
-                    <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}" required>
-                    @error('description')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+@section('content')
+<div class="container">
+    <h1 class="mb-4 text-primary">
+        <i class="fas fa-plus-circle"></i> Crear Nueva Cuenta
+    </h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-alt"></i> Información de la Cuenta</h5>
                 </div>
-            </div>
+                <div class="card-body">
+                    <form action="{{ route('accounts.store') }}" method="POST">
+                        @csrf
+
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="code" class="form-label"><i class="fas fa-code"></i> Código</label>
+                                <input type="text" name="code" id="code" class="form-control" value="{{ old('code') }}" required placeholder="1000000000000">
+                                @error('code')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="description" class="form-label"><i class="fas fa-file-alt"></i> Descripción</label>
+                                <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}" required>
+                                @error('description')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
 
             <div class="mb-3">
                 <label for="type_account" class="form-label">Tipo de Cuenta</label>
@@ -90,26 +95,32 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-        </form>
+                        <div class="mb-3">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Crear Cuenta
+                                </button>
+                                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Volver
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+@endsection
 
-    <script src="{{ mix('js/app.js') }}"></script>
-    <script>
-        document.getElementById('code').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, ''); // Eliminar cualquier carácter que no sea dígito
-            let paddedValue = value.padEnd(12, '0'); // Rellenar con ceros hasta tener 12 dígitos
+@section('scripts')
+<script>
+    document.getElementById('code').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // Eliminar cualquier carácter que no sea dígito
+        let paddedValue = value.padEnd(13, '0'); // Rellenar con ceros hasta tener 13 dígitos
 
-            let formattedValue = paddedValue.substring(0, 1) + '-' +
-                                 paddedValue.substring(1, 2) + '-' +
-                                 paddedValue.substring(2, 4) + '-' +
-                                 paddedValue.substring(4, 6) + '-' +
-                                 paddedValue.substring(6, 8) + '-' +
-                                 paddedValue.substring(8, 10) + '-' +
-                                 paddedValue.substring(10, 12);
-            
-            e.target.value = formattedValue;
-        });
-    </script>
-</body>
-</html>
+        // Solo mostrar números sin formato
+        e.target.value = paddedValue;
+    });
+</script>
+@endsection

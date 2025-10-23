@@ -1,0 +1,181 @@
+/* Estilos personalizados para el catálogo de cuentas */
+
+.account-table {
+    font-size: 0.9rem;
+}
+
+.account-code {
+    font-family: monospace;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.btn-group .btn {
+    margin: 0 1px;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.confirmation-dialog {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Animación para alertas */
+.alert {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para paginación */
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-link {
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Estilos para el buscador */
+.search-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Información de paginación */
+.pagination-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        margin: 1px 0;
+        width: 100%;
+    }
+    
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+    
+    .pagination {
+        justify-content: center;
+    }
+    
+    .card-header .d-flex {
+        flex-direction: column;
+        align-items: start !important;
+    }
+    
+    .card-header .d-flex > div {
+        margin-top: 0.5rem;
+    }
+    
+    .row.align-items-center {
+        text-align: center;
+    }
+    
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Mejorar el aspecto de los códigos de cuenta */
+.account-hierarchy {
+    padding-left: 0;
+}
+
+.account-hierarchy[data-level="1"] { padding-left: 20px; }
+.account-hierarchy[data-level="2"] { padding-left: 40px; }
+.account-hierarchy[data-level="3"] { padding-left: 60px; }
+.account-hierarchy[data-level="4"] { padding-left: 80px; }
+.account-hierarchy[data-level="5"] { padding-left: 100px; }
+.account-hierarchy[data-level="6"] { padding-left: 120px; }
+
+/* Estilos para estadísticas */
+.stats-card {
+    border-left: 4px solid #007bff;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Loading spinner para búsquedas */
+.loading-spinner {
+    display: none;
+}
+
+.loading .loading-spinner {
+    display: inline-block;
+}
+
+.loading .fas.fa-search {
+    display: none;
+}
