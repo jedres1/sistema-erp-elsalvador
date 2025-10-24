@@ -20,6 +20,13 @@ class DailyRegister extends Model
 
     protected $casts = [
         'date_register' => 'date',
+        'mount_debit' => 'decimal:4',
+        'mount_credit' => 'decimal:4',
+        'balance' => 'decimal:4',
+    ];
+
+    protected $attributes = [
+        'mayor' => 'N', // Default value
     ];
 
     /**

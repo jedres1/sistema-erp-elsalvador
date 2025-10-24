@@ -1,269 +1,255 @@
 @extends('layouts.app')
 
-@section('title', 'Partidas')
+@section('title', 'Partidas de Diario')
 
 @section('content')
-<div class="container-fluid">
-    <h1 class="mb-4 text-primary">
-        <i class="fas fa-file-invoice"></i> Partidas Contables
-    </h1>
-    
-    <!-- Controles superiores -->
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <button class="btn btn-success" onclick="showNewEntryModal()">
-                <i class="fas fa-plus"></i> Nueva Partida
-            </button>
-            <button class="btn btn-info">
-                <i class="fas fa-file-export"></i> Exportar
-            </button>
-        </div>
-        
-        <!-- Filtros y búsqueda -->
-        <div class="col-md-6">
-            <div class="d-flex gap-2">
-                <input type="date" class="form-control" id="dateFilter" placeholder="Filtrar por fecha">
-                <input type="text" class="form-control" placeholder="Buscar partida..." id="searchEntry">
-                <button class="btn btn-outline-primary" onclick="filterEntries()">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-book-open me-2"></i>Partidas de Diario</h2>
+    <a href="{{ route('entries.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Nueva Partida
+    </a>
+</div>
 
-    <!-- Tarjetas de resumen -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Total Partidas</h6>
-                            <h3>0</h3>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-file-invoice fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Total Débitos</h6>
-                            <h3>$0.00</h3>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-plus fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Total Créditos</h6>
-                            <h3>$0.00</h3>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-minus fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Balance</h6>
-                            <h3>$0.00</h3>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-balance-scale fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
 
-    <!-- Tabla de partidas -->
-    <div class="card shadow">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">
-                <i class="fas fa-list"></i> Lista de Partidas
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Fecha</th>
-                            <th>No. Partida</th>
-                            <th>Descripción</th>
-                            <th>Referencia</th>
-                            <th>Débito</th>
-                            <th>Crédito</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="8" class="text-center py-5">
-                                <i class="fas fa-file-invoice fa-4x text-muted mb-3"></i>
-                                <h5 class="text-muted">No hay partidas registradas</h5>
-                                <p class="text-muted">Comienza creando tu primera partida contable.</p>
-                                <button class="btn btn-primary btn-lg" onclick="showNewEntryModal()">
-                                    <i class="fas fa-plus"></i> Crear Primera Partida
+<div class="card">
+    <div class="card-body">
+        @if(isset($entries) && $entries->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Débito</th>
+                        <th>Crédito</th>
+                        <th>Estado</th>
+                        <th>Líneas</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($entries as $entry)
+                    <tr>
+                        <td>{{ $entry->date_register->format('d/m/Y') }}</td>
+                        <td>{{ $entry->description }}</td>
+                        <td class="text-end">{{ number_format($entry->mount_debit, 2) }}</td>
+                        <td class="text-end">{{ number_format($entry->mount_credit, 2) }}</td>
+                        <td class="text-center">
+                            @if($entry->mayor === 'N')
+                                <span class="badge bg-warning">Pendiente</span>
+                            @else
+                                <span class="badge bg-success">Mayorizada</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-info">{{ $entry->lines->count() }} líneas</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('entries.show', $entry->id) }}" 
+                                   class="btn btn-sm btn-outline-info" 
+                                   title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                @if($entry->mayor === 'N')
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-success" 
+                                        onclick="mayorizeEntry({{ $entry->id }})"
+                                        title="Mayorizar">
+                                    <i class="fas fa-check-circle"></i>
                                 </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                @else
+                                <span class="badge bg-success" title="Ya mayorizada">
+                                    <i class="fas fa-check"></i> Mayorizada
+                                </span>
+                                @endif
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger" 
+                                        onclick="confirmDelete({{ $entry->id }})"
+                                        title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
+            {{ $entries->links() }}
+        </div>
+        @else
+        <div class="text-center py-5">
+            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No hay partidas de diario registradas</h5>
+            <p class="text-muted">Comience creando su primera partida de diario.</p>
+            <a href="{{ route('entries.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Crear Primera Partida
+            </a>
+        </div>
+        @endif
     </div>
 </div>
 
-<!-- Modal para nueva partida -->
-<div class="modal fade" id="newEntryModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-plus-circle"></i> Nueva Partida Contable
-                </h5>
+                <h5 class="modal-title">Confirmar Eliminación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="entryForm">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Fecha</label>
-                            <input type="date" class="form-control" id="entryDate" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">No. Partida</label>
-                            <input type="text" class="form-control" id="entryNumber" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Referencia</label>
-                            <input type="text" class="form-control" id="entryReference">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <textarea class="form-control" id="entryDescription" rows="2" required></textarea>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-12">
-                            <h6>Detalle de la Partida</h6>
-                            <div class="table-responsive">
-                                <table class="table table-sm" id="entryDetailsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Cuenta</th>
-                                            <th>Descripción</th>
-                                            <th>Débito</th>
-                                            <th>Crédito</th>
-                                            <th>Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Los detalles se agregan dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addEntryDetail()">
-                                <i class="fas fa-plus"></i> Agregar Línea
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                <p>¿Está seguro que desea eliminar esta partida de diario?</p>
+                <p class="text-warning"><i class="fas fa-exclamation-triangle"></i> Esta acción no se puede deshacer.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="saveEntry()">
-                    <i class="fas fa-save"></i> Guardar Partida
-                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
             </div>
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function showNewEntryModal() {
-    // Configurar fecha actual
-    document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
-    
-    // Generar número de partida automático
-    document.getElementById('entryNumber').value = 'PT-' + Date.now();
-    
-    // Mostrar modal
-    new bootstrap.Modal(document.getElementById('newEntryModal')).show();
+let entryToDelete = null;
+
+function confirmDelete(entryId) {
+    entryToDelete = entryId;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
 }
 
-function addEntryDetail() {
-    const tbody = document.querySelector('#entryDetailsTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-control form-control-sm" required>
-                <option value="">Seleccionar cuenta...</option>
-                <!-- Las cuentas se cargarían dinámicamente desde el backend -->
-            </select>
-        </td>
-        <td>
-            <input type="text" class="form-control form-control-sm" placeholder="Descripción">
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm" placeholder="0.00" step="0.01" min="0">
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm" placeholder="0.00" step="0.01" min="0">
-        </td>
-        <td>
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEntryDetail(this)">
-                <i class="fas fa-trash"></i>
-            </button>
-        </td>
-    `;
-    tbody.appendChild(row);
+function mayorizeEntry(entryId) {
+    Swal.fire({
+        title: '¿Mayorizar partida?',
+        text: "Esta acción pasará la partida al libro mayor y no podrá ser revertida.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, mayorizar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/entries/${entryId}/mayorize`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remover la fila de la tabla inmediatamente
+                    const entryRow = document.querySelector(`button[onclick="mayorizeEntry(${entryId})"]`).closest('tr');
+                    entryRow.style.transition = 'opacity 0.5s';
+                    entryRow.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        entryRow.remove();
+                        
+                        // Verificar si no quedan más partidas
+                        const tbody = document.querySelector('tbody');
+                        if (tbody.children.length === 0) {
+                            tbody.innerHTML = `
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">No hay partidas de diario registradas</h5>
+                                        <p class="text-muted">Comience creando su primera partida de diario.</p>
+                                        <a href="{{ route('entries.create') }}" class="btn btn-primary">
+                                            <i class="fas fa-plus me-1"></i>Crear Primera Partida
+                                        </a>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    }, 500);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Mayorizada!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al mayorizar la partida.'
+                });
+            });
+        }
+    });
 }
 
-function removeEntryDetail(button) {
-    button.closest('tr').remove();
-}
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (entryToDelete) {
+        // Cerrar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+        modal.hide();
 
-function saveEntry() {
-    // Aquí iría la lógica para guardar la partida
-    alert('Funcionalidad en desarrollo: Guardar partida');
-}
+        // Realizar la eliminación
+        fetch(`/entries/${entryToDelete}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Eliminado!',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al eliminar la partida.'
+            });
+        });
 
-function filterEntries() {
-    // Aquí iría la lógica para filtrar partidas
-    alert('Funcionalidad en desarrollo: Filtrar partidas');
-}
-
-// Agregar una línea inicial al abrir el modal
-document.getElementById('newEntryModal').addEventListener('shown.bs.modal', function () {
-    if (document.querySelector('#entryDetailsTable tbody').children.length === 0) {
-        addEntryDetail();
-        addEntryDetail(); // Agregar al menos 2 líneas iniciales
+        entryToDelete = null;
     }
 });
 </script>

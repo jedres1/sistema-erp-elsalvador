@@ -11,6 +11,22 @@ class AccountCatalog extends Model
     ];
 
     /**
+     * Scope para obtener solo cuentas que aceptan transacciones
+     */
+    public function scopeAcceptingTransactions($query)
+    {
+        return $query->where('accept_transaction', 'S');
+    }
+
+    /**
+     * Relación con DailyRegistersLine (movimientos de la cuenta)
+     */
+    public function dailyRegisterLines()
+    {
+        return $this->hasMany(DailyRegistersLine::class, 'account_catalog_id');
+    }
+
+    /**
      * Obtener la cuenta padre de la cuenta actual.
      */
     public function parent()

@@ -2,11 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountCatalogController;
+use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\LedgerController;
 
 
-// Ruta de bienvenida
+// Ruta de bienvenida - redirige al catálogo de cuentas
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('accounts.index');
+});
+
+// Redirección de entries al libro diario
+Route::get('/entries', function () {
+    return redirect()->route('journal.index');
 });
 
 // Rutas para las cuentas
@@ -17,23 +24,27 @@ Route::get('/accounts/{id}/edit', [AccountCatalogController::class, 'edit'])->na
 Route::put('/accounts/{id}', [AccountCatalogController::class, 'update'])->name('accounts.update'); // Ruta para actualizar
 Route::delete('/accounts/{id}', [AccountCatalogController::class, 'destroy'])->name('accounts.destroy'); // Ruta para eliminar
 
-// Rutas para las nuevas secciones del sistema contable
+// Rutas para el sistema contable
+// Funciones de partidas (sin mostrar en navegación, solo para operaciones internas)
 Route::prefix('entries')->name('entries.')->group(function () {
-    Route::get('/', function () {
-        return view('entries.index');
-    })->name('index');
+    Route::get('/create', [JournalEntryController::class, 'create'])->name('create');
+    Route::post('/', [JournalEntryController::class, 'store'])->name('store');
+    Route::get('/{id}', [JournalEntryController::class, 'show'])->name('show');
+    Route::delete('/{id}', [JournalEntryController::class, 'destroy'])->name('destroy');
+    Route::patch('/{id}/mayorize', [JournalEntryController::class, 'mayorize'])->name('mayorize');
 });
 
+// Ruta API para obtener cuentas que aceptan transacciones
+Route::get('/api/entries/accounts', [JournalEntryController::class, 'getTransactionAccounts'])->name('entries.api.accounts');
+
 Route::prefix('journal')->name('journal.')->group(function () {
-    Route::get('/', function () {
-        return view('journal.index');
-    })->name('index');
+    Route::get('/', [JournalEntryController::class, 'index'])->name('index'); // Libro Diario
 });
 
 Route::prefix('ledger')->name('ledger.')->group(function () {
-    Route::get('/', function () {
-        return view('ledger.index');
-    })->name('index');
+    Route::get('/', [LedgerController::class, 'index'])->name('index');
+    Route::get('/account/{id}', [LedgerController::class, 'show'])->name('account');
+    Route::get('/balance', [LedgerController::class, 'balanceSheet'])->name('balance');
 });
 
 Route::prefix('balance')->name('balance.')->group(function () {

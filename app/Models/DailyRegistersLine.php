@@ -9,10 +9,12 @@ class DailyRegistersLine extends Model
 {
     use HasFactory;
 
+    protected $table = 'daily_registers_line';
+
     protected $fillable = [
         'daily_register_id',
         'line',
-        'account_cataloge_id',
+        'account_catalog_id',
         'debit_amount',
         'credit_amount',
     ];
@@ -27,10 +29,10 @@ class DailyRegistersLine extends Model
     }
 
     /**
-     * Relación con AccountCataloge (si tienes un modelo para eso)
+     * Relación con AccountCatalog
      */
     public function accountCataloge()
     {
-        return $this->belongsTo(AccountCatalog::class);
+        return $this->belongsTo(AccountCatalog::class, 'account_catalog_id');
     }
 }

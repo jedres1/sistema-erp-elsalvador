@@ -27,7 +27,7 @@ class DailyRegisterController extends Controller
             'mount_debit' => 'required|numeric',
             'mount_credit' => 'required|numeric',
             'balance' => 'required|numeric',
-            'mayor' => 'required|in:YES,NO',
+            'mayor' => 'required|in:Y,N',
         ]);
 
         $dailyRegister = DailyRegister::create($validatedData);
@@ -57,7 +57,7 @@ class DailyRegisterController extends Controller
             'mount_debit' => 'required|numeric',
             'mount_credit' => 'required|numeric',
             'balance' => 'required|numeric',
-            'mayor' => 'required|in:YES,NO',
+            'mayor' => 'required|in:Y,N',
         ]);
 
         $dailyRegister->update($validatedData);
