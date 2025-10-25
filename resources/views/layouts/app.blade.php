@@ -101,6 +101,11 @@
                         <i class="fas fa-balance-scale"></i>
                         Balance General
                     </a>
+                    
+                    <a class="nav-link {{ request()->routeIs('estado-resultados.*') ? 'active' : '' }}" href="{{ route('estado-resultados.index') }}">
+                        <i class="fas fa-chart-line"></i>
+                        Estado de Resultados
+                    </a>
                 </nav>
             </div>
             

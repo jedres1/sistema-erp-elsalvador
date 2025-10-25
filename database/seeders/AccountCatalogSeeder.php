@@ -571,14 +571,6 @@ class AccountCatalogSeeder extends Seeder
                 'accept_transaction' =>'N'
             ],
             [
-                'code' =>'1.1.02.04.01.01.00',
-                'description' => 'MAXIMILIANO GUILLERMO NOVOA CHAVEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
                 'code' =>'1.1.02.05.00.00.00',
                 'description' => 'PRESTAMOS A LOS ACCIONISTAS', 
                 'type_account' =>'A', 
@@ -593,30 +585,6 @@ class AccountCatalogSeeder extends Seeder
                 'type_naturaled' =>'D', 
                 'group' =>'B' ,
                 'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'1.1.02.05.01.01.00',
-                'description' => 'MAXIMILIANO GUILLERMO NOVOA CHAVEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.05.01.02.00',
-                'description' => 'ORLANDO JOSE LLOVERA ZEPEDA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.05.01.03.00',
-                'description' => 'JOSE TOMAS PERALTA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
             ],
             [
                 'code' =>'1.1.02.05.01.04.00',
@@ -643,22 +611,6 @@ class AccountCatalogSeeder extends Seeder
                 'accept_transaction' =>'N'
             ],
             [
-                'code' =>'1.1.02.06.01.01.00',
-                'description' => 'NELSON JAIME VILLALTA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.01.02.00',
-                'description' => 'WENDY DAHBURA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
                 'code' =>'1.1.02.06.02.00.00',
                 'description' => 'PERSONAL DE VENTAS', 
                 'type_account' =>'A', 
@@ -667,188 +619,12 @@ class AccountCatalogSeeder extends Seeder
                 'accept_transaction' =>'N'
             ],
             [
-                'code' =>'1.1.02.06.02.01.00',
-                'description' => 'ANA TERESA DE LEON', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.02.00',
-                'description' => 'GRISELDA RIVERA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.03.00',
-                'description' => 'ANA MEYLIN RAMIREZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.04.00',
-                'description' => 'CARMEN LLOVERA ZEPEDA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.05.00',
-                'description' => 'GABRIEL RODRIGUEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.06.00',
-                'description' => 'CARLOS ELIAS KARRAA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.07.00',
-                'description' => 'FRANCELLY CECILIA RODIL CASTILLO', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.02.08.00',
-                'description' => 'ANA PATRICIA GARCIA INGLES', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
                 'code' =>'1.1.02.06.03.00.00',
                 'description' => 'PERSONAL DE PRODUCCION', 
                 'type_account' =>'A', 
                 'type_naturaled' =>'D', 
                 'group' =>'B' ,
                 'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'1.1.02.06.03.01.00',
-                'description' => 'RONALD MARTINEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.02.00',
-                'description' => 'JULIO CESAR RAMOS', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.03.00',
-                'description' => 'LUIS ESPERANZA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.04.00',
-                'description' => 'DOMINGO HUEZO', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.05.00',
-                'description' => 'MIGUEL RAMOS', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.06.00',
-                'description' => 'MARVIN SANCHEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.07.00',
-                'description' => 'ALBERTO VENTURA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.08.00',
-                'description' => 'DARVIN LEMUS', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.09.00',
-                'description' => 'ERICK PANAMEÑO', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.10.00',
-                'description' => 'JOSE ROBERTO BERNAL', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.11.00',
-                'description' => 'JORGE BATRES', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.12.00',
-                'description' => 'EDWIN ANTONIO GARCIA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.13.00',
-                'description' => 'OSCAR ALBERTO HERNANDEZ', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'1.1.02.06.03.14.00',
-                'description' => 'PEDRO JOSE RIVERA', 
-                'type_account' =>'A', 
-                'type_naturaled' =>'D', 
-                'group' =>'B' ,
-                'accept_transaction' =>'S'
             ],
             [
                 'code' =>'1.1.02.06.03.15.00',
@@ -8545,62 +8321,6 @@ class AccountCatalogSeeder extends Seeder
                 'type_naturaled' =>'D', 
                 'group' =>'O' ,
                 'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'7.1.00.00.00.00.00',
-                'description' => 'CUENTAS DE ORDEN DEUDORAS', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'D', 
-                'group' =>'O' ,
-                'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'7.1.01.00.00.00.00',
-                'description' => 'CUENTAS DE ORDEN', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'D', 
-                'group' =>'O' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'7.1.02.00.00.00.00',
-                'description' => 'CHEQUES EN GARANTIA', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'D', 
-                'group' =>'O' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'8.0.00.00.00.00.00',
-                'description' => 'CUENTAS  DE MEMORANDUM ACREEDO', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'A', 
-                'group' =>'O' ,
-                'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'8.1.00.00.00.00.00',
-                'description' => 'CUENTAS DE ORDEN ACREEDORAS', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'A', 
-                'group' =>'O' ,
-                'accept_transaction' =>'N'
-            ],
-            [
-                'code' =>'8.1.01.00.00.00.00',
-                'description' => 'CONTRAPARTE DE CUENTAS DE ORDEN', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'A', 
-                'group' =>'O' ,
-                'accept_transaction' =>'S'
-            ],
-            [
-                'code' =>'8.1.02.00.00.00.00',
-                'description' => 'CHEQUES EN GARANTIA', 
-                'type_account' =>'O', 
-                'type_naturaled' =>'A', 
-                'group' =>'O' ,
-                'accept_transaction' =>'S'
             ]
         ]);
     }

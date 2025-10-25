@@ -48,7 +48,9 @@ Route::prefix('ledger')->name('ledger.')->group(function () {
 });
 
 Route::prefix('balance')->name('balance.')->group(function () {
-    Route::get('/', function () {
-        return view('balance.index');
-    })->name('index');
+    Route::get('/', [App\Http\Controllers\BalanceController::class, 'index'])->name('index');
+});
+
+Route::prefix('estado-resultados')->name('estado-resultados.')->group(function () {
+    Route::get('/', [App\Http\Controllers\EstadoResultadosController::class, 'index'])->name('index');
 });
