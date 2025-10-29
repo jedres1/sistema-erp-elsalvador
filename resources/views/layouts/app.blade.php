@@ -69,6 +69,54 @@
             color: #bdc3c7 !important;
             font-size: 0.9rem;
         }
+        
+        .nav-section-header h6 {
+            color: #bdc3c7;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .nav-divider {
+            border-color: rgba(255,255,255,0.1);
+            margin: 20px 15px;
+        }
+        
+        .nav-link {
+            padding-left: 30px;
+        }
+        
+        .nav-section-toggle {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-section-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .nav-section-items {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .nav-section-items.collapsed {
+            height: 0 !important;
+            opacity: 0;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            float: right;
+            margin-top: 2px;
+        }
+        
+        .toggle-icon.rotated {
+            transform: rotate(-90deg);
+        }
     </style>
 </head>
 <body>
@@ -82,30 +130,96 @@
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}" href="{{ route('accounts.index') }}">
-                        <i class="fas fa-list-alt"></i>
-                        Catálogo de Cuentas
-                    </a>
+                    <!-- Título Principal de Contabilidad con Toggle -->
+                    <div class="nav-section-header">
+                        <h6 class="text-light text-uppercase fw-bold mb-3 mt-2 nav-section-toggle" onclick="toggleSection('contabilidad')">
+                            <i class="fas fa-calculator"></i> Contabilidad
+                            <i class="fas fa-chevron-down toggle-icon" id="contabilidad-icon"></i>
+                        </h6>
+                    </div>
                     
-                    <a class="nav-link {{ request()->routeIs('journal.*') ? 'active' : '' }}" href="{{ route('journal.index') }}">
-                        <i class="fas fa-book"></i>
-                        Libro Diario
-                    </a>
+                    <div id="contabilidad-items" class="nav-section-items">
+                        <a class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}" href="{{ route('accounts.index') }}">
+                            <i class="fas fa-list-alt"></i>
+                            Catálogo de Cuentas
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('journal.*') ? 'active' : '' }}" href="{{ route('journal.index') }}">
+                            <i class="fas fa-book"></i>
+                            Libro Diario
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('ledger.*') ? 'active' : '' }}" href="{{ route('ledger.index') }}">
+                            <i class="fas fa-book-open"></i>
+                            Libro Mayor
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('balance.*') ? 'active' : '' }}" href="{{ route('balance.index') }}">
+                            <i class="fas fa-balance-scale"></i>
+                            Balance General
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('estado-resultados.*') ? 'active' : '' }}" href="{{ route('estado-resultados.index') }}">
+                            <i class="fas fa-chart-line"></i>
+                            Estado de Resultados
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('parametros.*') ? 'active' : '' }}" href="{{ route('parametros.index') }}">
+                            <i class="fas fa-sliders-h"></i>
+                            Parámetros Contables
+                        </a>
+                    </div>
                     
-                    <a class="nav-link {{ request()->routeIs('ledger.*') ? 'active' : '' }}" href="{{ route('ledger.index') }}">
-                        <i class="fas fa-book-open"></i>
-                        Libro Mayor
-                    </a>
+                    <!-- Separador -->
+                    <hr class="nav-divider">
                     
-                    <a class="nav-link {{ request()->routeIs('balance.*') ? 'active' : '' }}" href="{{ route('balance.index') }}">
-                        <i class="fas fa-balance-scale"></i>
-                        Balance General
-                    </a>
+                    <!-- Sección Facturación -->
+                    <div class="nav-section-header">
+                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('facturacion')">
+                            <i class="fas fa-file-invoice-dollar"></i> Facturación
+                            <i class="fas fa-chevron-down toggle-icon" id="facturacion-icon"></i>
+                        </h6>
+                    </div>
                     
-                    <a class="nav-link {{ request()->routeIs('estado-resultados.*') ? 'active' : '' }}" href="{{ route('estado-resultados.index') }}">
-                        <i class="fas fa-chart-line"></i>
-                        Estado de Resultados
-                    </a>
+                    <div id="facturacion-items" class="nav-section-items">
+                        <a class="nav-link {{ request()->routeIs('facturacion.index') ? 'active' : '' }}" href="{{ route('facturacion.index') }}">
+                            <i class="fas fa-file-invoice"></i>
+                            Gestión de Facturas
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
+                            <i class="fas fa-file-digital"></i>
+                            Documentos Electrónicos
+                        </a>
+                    </div>
+                    
+                    <!-- Separador -->
+                    <hr class="nav-divider">
+                    
+                    <!-- Sección Operaciones -->
+                    <div class="nav-section-header">
+                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('operaciones')">
+                            <i class="fas fa-cogs"></i> Operaciones
+                            <i class="fas fa-chevron-down toggle-icon" id="operaciones-icon"></i>
+                        </h6>
+                    </div>
+                    
+                    <div id="operaciones-items" class="nav-section-items">
+                        <a class="nav-link {{ request()->routeIs('inventario.*') ? 'active' : '' }}" href="{{ route('inventario.index') }}">
+                            <i class="fas fa-boxes"></i>
+                            Inventario
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('compras.*') ? 'active' : '' }}" href="{{ route('compras.index') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            Compras
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('bancos.*') ? 'active' : '' }}" href="{{ route('bancos.index') }}">
+                            <i class="fas fa-university"></i>
+                            Control Bancario
+                        </a>
+                    </div>
                 </nav>
             </div>
             
@@ -120,6 +234,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        function toggleSection(sectionId) {
+            const items = document.getElementById(sectionId + '-items');
+            const icon = document.getElementById(sectionId + '-icon');
+            
+            if (items.classList.contains('collapsed')) {
+                items.classList.remove('collapsed');
+                icon.classList.remove('rotated');
+                // Guardar estado en localStorage
+                localStorage.setItem('nav_' + sectionId + '_collapsed', 'false');
+            } else {
+                items.classList.add('collapsed');
+                icon.classList.add('rotated');
+                // Guardar estado en localStorage
+                localStorage.setItem('nav_' + sectionId + '_collapsed', 'true');
+            }
+        }
+        
+        // Restaurar estado desde localStorage al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = ['contabilidad', 'operaciones'];
+            
+            sections.forEach(function(sectionId) {
+                const isCollapsed = localStorage.getItem('nav_' + sectionId + '_collapsed') === 'true';
+                
+                if (isCollapsed) {
+                    const items = document.getElementById(sectionId + '-items');
+                    const icon = document.getElementById(sectionId + '-icon');
+                    
+                    if (items && icon) {
+                        items.classList.add('collapsed');
+                        icon.classList.add('rotated');
+                    }
+                }
+            });
+        });
+    </script>
     
     @yield('scripts')
 </body>
