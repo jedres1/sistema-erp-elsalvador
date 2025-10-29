@@ -1,64 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# 🏢 Sistema ERP Empresarial - El Salvador
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema integral de **Planificación de Recursos Empresariales (ERP)** desarrollado en Laravel para empresas comerciales en El Salvador. Incluye módulos completos de contabilidad, facturación, inventario y gestión financiera.
 
-## About Laravel
+## 🚀 Características Principales
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 📊 **Módulo Contable**
+- **Balance General** automatizado con clasificación de activos/pasivos
+- **Estado de Resultados** con cálculo automático de utilidades
+- **Libro Diario** para registro de asientos contables
+- **Catálogo de Cuentas** simplificado (107 cuentas estándar)
+- **Mayor de Cuentas** con saldos actualizados
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🧾 **Facturación Electrónica**
+- Facturación con cálculo automático de **IVA 13%**
+- Gestión completa de clientes y productos
+- Descuentos y totales en tiempo real
+- Generación de PDF para facturas
+- Integración con inventario
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 📦 **Gestión de Inventario**
+- Control de stock en tiempo real
+- **Kardex** de productos con movimientos
+- Gestión de categorías y proveedores
+- Reportes de inventario valorizado
+- Alertas de stock mínimo
 
-## Learning Laravel
+### 🏦 **Módulos Financieros**
+- Gestión bancaria y conciliaciones
+- Control de compras y cuentas por pagar
+- Documentos electrónicos
+- Parámetros contables configurables
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🌎 **Base Geográfica El Salvador**
+- **14 Departamentos** oficiales
+- **44 Municipios** completos
+- **262 Distritos** actualizados
+- Integración automática en formularios
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tecnologías
 
-## Laravel Sponsors
+- **Backend**: Laravel 8.83.27
+- **Frontend**: Bootstrap 5.1.3
+- **Base de Datos**: SQLite/MySQL
+- **JavaScript**: Vanilla JS con funciones avanzadas
+- **PDF**: Laravel PDF Generator
+- **Autenticación**: Laravel Auth
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## ⚡ Instalación Rápida
 
-### Premium Partners
+```bash
+# Clonar repositorio
+git clone https://github.com/jedres1/accounts_catalog.git
+cd accounts_catalog
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+# Instalar dependencias
+composer install
+npm install
 
-## Contributing
+# Configurar entorno
+cp .env.example .env
+php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Migrar y sembrar base de datos
+php artisan migrate
+php artisan db:seed --class=AccountCatalogSeeder
 
-## Code of Conduct
+# Iniciar servidor
+php artisan serve --port=8002
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📋 Estructura del Catálogo de Cuentas
 
-## Security Vulnerabilities
+### 1️⃣ **ACTIVOS** (1.x.xx.xx.xx.xx.xx)
+- **1.1** Activos Corrientes
+  - Efectivo y equivalentes (Caja, Bancos)
+  - Cuentas por cobrar (Clientes, IVA Crédito)
+  - Inventarios (Mercadería, Materiales)
+  - Gastos pagados por adelantado
+- **1.2** Activos No Corrientes
+  - Propiedad, planta y equipo
+  - Depreciación acumulada
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2️⃣ **PASIVOS** (2.x.xx.xx.xx.xx.xx)
+- **2.1** Pasivos Corrientes
+  - Proveedores e IVA Débito Fiscal
+  - Obligaciones laborales (ISSS, AFP)
+  - Préstamos a corto plazo
+- **2.2** Pasivos No Corrientes
 
-## License
+### 3️⃣ **PATRIMONIO** (3.x.xx.xx.xx.xx.xx)
+- Capital social y reservas
+- Utilidades retenidas y del ejercicio
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4️⃣ **INGRESOS** (4.x.xx.xx.xx.xx.xx)
+- **4.1** Operacionales (Ventas, Servicios)
+- **4.2** No Operacionales (Financieros)
+
+### 5️⃣ **COSTOS** (5.x.xx.xx.xx.xx.xx)
+- Costo de mercadería vendida
+- Compras y fletes
+
+### 6️⃣ **GASTOS** (6.x.xx.xx.xx.xx.xx)
+- **6.1** Administración
+- **6.2** Ventas
+- **6.3** Financieros
+- **6.4** Otros gastos
+
+## 🎯 Casos de Uso
+
+✅ **Empresas Comerciales** - Compra y venta de productos  
+✅ **Empresas de Servicios** - Prestación de servicios profesionales  
+✅ **PYMES Salvadoreñas** - Cumplimiento fiscal local  
+✅ **Contadores** - Herramienta integral de trabajo  
+✅ **Estudiantes** - Aprendizaje de sistemas contables  
+
+## 📊 Reportes Incluidos
+
+- 📈 **Balance General** clasificado
+- 📊 **Estado de Resultados** por períodos
+- 📋 **Libro Diario** cronológico
+- 💰 **Mayor de Cuentas** individual
+- 📦 **Inventario Valorizado**
+- 🧾 **Reporte de Ventas**
+
+## 🔧 Configuración Avanzada
+
+### Variables de Entorno Importantes
+```env
+APP_NAME="Sistema ERP"
+DB_CONNECTION=sqlite
+IVA_RATE=0.13
+CURRENCY=USD
+TIMEZONE=America/El_Salvador
+```
+
+### Parámetros Contables
+- **IVA**: 13% (configurable)
+- **Moneda**: USD (configurable)
+- **Período Fiscal**: Enero-Diciembre
+- **Método Inventario**: FIFO/Promedio
+
+## 🤝 Contribuciones
+
+¡Las contribuciones son bienvenidas! Por favor:
+
+1. Fork el proyecto
+2. Crea una rama feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles.
+
+## 📞 Soporte
+
+- 📧 Email: jedres1@github.com
+- 🐛 Issues: [GitHub Issues](https://github.com/jedres1/accounts_catalog/issues)
+- 📖 Wiki: [Documentación completa](https://github.com/jedres1/accounts_catalog/wiki)
+
+---
+
+**Desarrollado con ❤️ para empresas salvadoreñas**
+
+> Sistema robusto, escalable y fácil de usar para la gestión integral de tu empresa.
