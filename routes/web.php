@@ -66,21 +66,6 @@ Route::prefix('parametros')->name('parametros.')->group(function () {
     Route::get('/{id}/toggle', [App\Http\Controllers\ParametrosContablesController::class, 'toggle'])->name('toggle');
 });
 
-// Rutas para Facturación
-Route::prefix('facturacion')->name('facturacion.')->group(function () {
-    Route::get('/', [App\Http\Controllers\FacturacionController::class, 'index'])->name('index');
-    Route::get('/create', [App\Http\Controllers\FacturacionController::class, 'create'])->name('create');
-    Route::post('/', [App\Http\Controllers\FacturacionController::class, 'store'])->name('store');
-    Route::get('/{id}', [App\Http\Controllers\FacturacionController::class, 'show'])->name('show');
-    Route::get('/{id}/edit', [App\Http\Controllers\FacturacionController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [App\Http\Controllers\FacturacionController::class, 'update'])->name('update');
-    Route::delete('/{id}', [App\Http\Controllers\FacturacionController::class, 'destroy'])->name('destroy');
-    Route::get('/{id}/pdf', [App\Http\Controllers\FacturacionController::class, 'generarPdf'])->name('pdf');
-    Route::post('/{id}/enviar', [App\Http\Controllers\FacturacionController::class, 'enviar'])->name('enviar');
-    Route::post('/{id}/pagar', [App\Http\Controllers\FacturacionController::class, 'pagar'])->name('pagar');
-    Route::post('/{id}/cancelar', [App\Http\Controllers\FacturacionController::class, 'cancelar'])->name('cancelar');
-});
-
 // Rutas para Documentos Electrónicos
 Route::prefix('documentos-electronicos')->name('documentos-electronicos.')->group(function () {
     Route::get('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'index'])->name('index');
@@ -98,12 +83,23 @@ Route::prefix('documentos-electronicos')->name('documentos-electronicos.')->grou
         Route::get('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesIndex'])->name('index');
         Route::get('/create', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesCreate'])->name('create');
         Route::post('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStore'])->name('store');
+        Route::post('/ajax', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStoreAjax'])->name('store.ajax');
         Route::get('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesShow'])->name('show');
         Route::get('/{id}/edit', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesEdit'])->name('edit');
         Route::put('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesUpdate'])->name('update');
         Route::delete('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesDestroy'])->name('destroy');
         Route::get('/buscar/{term}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesBuscar'])->name('buscar');
     });
+});
+
+// Rutas para Cuentas por Cobrar
+Route::prefix('cuentas-por-cobrar')->name('cuentas-por-cobrar.')->group(function () {
+    Route::get('/', [App\Http\Controllers\CuentasPorCobrarController::class, 'index'])->name('index');
+    Route::get('/{id}', [App\Http\Controllers\CuentasPorCobrarController::class, 'show'])->name('show');
+    Route::post('/{id}/pago', [App\Http\Controllers\CuentasPorCobrarController::class, 'registrarPago'])->name('registrar-pago');
+    Route::get('/reportes/antiguedad', [App\Http\Controllers\CuentasPorCobrarController::class, 'reporteAntiguedad'])->name('reporte-antiguedad');
+    Route::get('/exportar/excel', [App\Http\Controllers\CuentasPorCobrarController::class, 'exportarExcel'])->name('exportar-excel');
+    Route::post('/{id}/recordatorio', [App\Http\Controllers\CuentasPorCobrarController::class, 'enviarRecordatorio'])->name('enviar-recordatorio');
 });
 
 // Rutas para Inventario
@@ -134,6 +130,17 @@ Route::prefix('compras')->name('compras.')->group(function () {
     Route::post('/{id}/recibir', [App\Http\Controllers\ComprasController::class, 'recibir'])->name('recibir');
     Route::post('/{id}/aprobar', [App\Http\Controllers\ComprasController::class, 'aprobar'])->name('aprobar');
     Route::post('/{id}/cancelar', [App\Http\Controllers\ComprasController::class, 'cancelar'])->name('cancelar');
+});
+
+// Rutas para Cuentas por Pagar
+Route::prefix('cuentas-por-pagar')->name('cuentas-por-pagar.')->group(function () {
+    Route::get('/', [App\Http\Controllers\CuentasPorPagarController::class, 'index'])->name('index');
+    Route::get('/{id}', [App\Http\Controllers\CuentasPorPagarController::class, 'show'])->name('show');
+    Route::post('/{id}/pago', [App\Http\Controllers\CuentasPorPagarController::class, 'registrarPago'])->name('registrar-pago');
+    Route::post('/{id}/programar', [App\Http\Controllers\CuentasPorPagarController::class, 'programarPago'])->name('programar-pago');
+    Route::get('/reportes/antiguedad', [App\Http\Controllers\CuentasPorPagarController::class, 'reporteAntiguedad'])->name('reporte-antiguedad');
+    Route::get('/exportar/excel', [App\Http\Controllers\CuentasPorPagarController::class, 'exportarExcel'])->name('exportar-excel');
+    Route::post('/{id}/aprobar', [App\Http\Controllers\CuentasPorPagarController::class, 'aprobarPago'])->name('aprobar-pago');
 });
 
 // Rutas para Control Bancario

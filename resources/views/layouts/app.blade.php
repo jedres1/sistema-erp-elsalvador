@@ -173,20 +173,15 @@
                     <!-- Separador -->
                     <hr class="nav-divider">
                     
-                    <!-- Sección Facturación -->
+                    <!-- Sección Documentos Electrónicos -->
                     <div class="nav-section-header">
-                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('facturacion')">
-                            <i class="fas fa-file-invoice-dollar"></i> Facturación
-                            <i class="fas fa-chevron-down toggle-icon" id="facturacion-icon"></i>
+                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('documentos')">
+                            <i class="fas fa-file-digital"></i> Documentos Electrónicos
+                            <i class="fas fa-chevron-down toggle-icon" id="documentos-icon"></i>
                         </h6>
                     </div>
                     
-                    <div id="facturacion-items" class="nav-section-items">
-                        <a class="nav-link {{ request()->routeIs('facturacion.index') ? 'active' : '' }}" href="{{ route('facturacion.index') }}">
-                            <i class="fas fa-file-invoice"></i>
-                            Gestión de Facturas
-                        </a>
-                        
+                    <div id="documentos-items" class="nav-section-items">
                         <a class="nav-link {{ request()->routeIs('documentos-electronicos.index') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
                             <i class="fas fa-file-digital"></i>
                             Documentos Electrónicos
@@ -195,6 +190,11 @@
                         <a class="nav-link {{ request()->routeIs('documentos-electronicos.clientes.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.clientes.index') }}">
                             <i class="fas fa-users"></i>
                             Gestión de Clientes
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.index') }}">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            Cuentas por Cobrar
                         </a>
                     </div>
                     
@@ -218,6 +218,11 @@
                         <a class="nav-link {{ request()->routeIs('compras.*') ? 'active' : '' }}" href="{{ route('compras.index') }}">
                             <i class="fas fa-shopping-cart"></i>
                             Compras
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('cuentas-por-pagar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-pagar.index') }}">
+                            <i class="fas fa-credit-card"></i>
+                            Cuentas por Pagar
                         </a>
                         
                         <a class="nav-link {{ request()->routeIs('bancos.*') ? 'active' : '' }}" href="{{ route('bancos.index') }}">

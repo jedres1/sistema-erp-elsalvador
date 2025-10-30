@@ -131,8 +131,52 @@ class DocumentosElectronicosController extends Controller
         return view('documentos-electronicos.create', compact('tipos_documento', 'clientes'));
     }
 
+        /**
+     * Store a newly created client via AJAX.
+     */
+    public function clientesStoreAjax(Request $request)
+    {
+        $request->validate([
+            'numero_documento' => 'required|string|max:20',
+            'tipo_documento' => 'required|in:DUI,NIT,PASAPORTE,CARNET_EXTRANJERIA',
+            'razon_social' => 'required|string|max:255',
+            'nombre_comercial' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:15',
+            'email' => 'nullable|email|max:255',
+            'direccion' => 'nullable|string|max:500',
+            'departamento' => 'nullable|string|max:100',
+            'municipio' => 'nullable|string|max:100',
+            'distrito' => 'nullable|string|max:100'
+        ]);
+
+        // Simular la creación del cliente (en producción se guardaria en la base de datos)
+        $nuevoCliente = [
+            'id' => rand(1000, 9999), // ID temporal simulado
+            'numero_documento' => $request->numero_documento,
+            'tipo_documento' => $request->tipo_documento,
+            'razon_social' => $request->razon_social,
+            'nombre_comercial' => $request->nombre_comercial,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'direccion' => $request->direccion,
+            'departamento' => $request->departamento,
+            'municipio' => $request->municipio,
+            'distrito' => $request->distrito,
+            'limite_credito' => 0,
+            'credito_disponible' => 0,
+            'estado' => 'Activo',
+            'fecha_registro' => now()->format('Y-m-d H:i:s')
+        ];
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cliente creado exitosamente',
+            'cliente' => $nuevoCliente
+        ]);
+    }
+
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created client.
      */
     public function store(Request $request)
     {
