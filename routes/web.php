@@ -77,19 +77,19 @@ Route::prefix('documentos-electronicos')->name('documentos-electronicos.')->grou
     Route::get('/{id}/xml', [App\Http\Controllers\DocumentosElectronicosController::class, 'descargarXml'])->name('xml');
     Route::get('/{id}/pdf', [App\Http\Controllers\DocumentosElectronicosController::class, 'descargarPdf'])->name('pdf');
     Route::get('/configuracion', [App\Http\Controllers\DocumentosElectronicosController::class, 'configuracion'])->name('configuracion');
-    
-    // Rutas para gestión de clientes
-    Route::prefix('clientes')->name('clientes.')->group(function () {
-        Route::get('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesIndex'])->name('index');
-        Route::get('/create', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesCreate'])->name('create');
-        Route::post('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStore'])->name('store');
-        Route::post('/ajax', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStoreAjax'])->name('store.ajax');
-        Route::get('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesShow'])->name('show');
-        Route::get('/{id}/edit', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesEdit'])->name('edit');
-        Route::put('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesUpdate'])->name('update');
-        Route::delete('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesDestroy'])->name('destroy');
-        Route::get('/buscar/{term}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesBuscar'])->name('buscar');
-    });
+});
+
+// Rutas para gestión de clientes (independientes)
+Route::prefix('clientes')->name('clientes.')->group(function () {
+    Route::get('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesIndex'])->name('index');
+    Route::get('/create', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesCreate'])->name('create');
+    Route::post('/', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStore'])->name('store');
+    Route::post('/ajax', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesStoreAjax'])->name('store.ajax');
+    Route::get('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesShow'])->name('show');
+    Route::get('/{id}/edit', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesEdit'])->name('edit');
+    Route::put('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesUpdate'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesDestroy'])->name('destroy');
+    Route::get('/buscar/{term}', [App\Http\Controllers\DocumentosElectronicosController::class, 'clientesBuscar'])->name('buscar');
 });
 
 // Rutas para Cuentas por Cobrar
