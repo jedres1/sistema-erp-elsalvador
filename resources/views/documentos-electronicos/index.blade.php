@@ -12,6 +12,10 @@
                     Documentos Electrónicos
                 </h2>
                 <div class="btn-group" role="group">
+                    <a href="{{ route('documentos-electronicos.clientes.index') }}" class="btn btn-success">
+                        <i class="fas fa-users"></i>
+                        Gestión de Clientes
+                    </a>
                     <a href="{{ route('documentos-electronicos.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         Nuevo Documento

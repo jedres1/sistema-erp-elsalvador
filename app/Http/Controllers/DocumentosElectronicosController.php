@@ -248,4 +248,250 @@ class DocumentosElectronicosController extends Controller
 
         return view('documentos-electronicos.configuracion', compact('configuracion'));
     }
+
+    // ========== MÉTODOS PARA GESTIÓN DE CLIENTES ==========
+
+    /**
+     * Mostrar lista de clientes
+     */
+    public function clientesIndex()
+    {
+        // Datos simulados de clientes
+        $clientes = [
+            [
+                'id' => 1,
+                'tipo_documento' => 'NIT',
+                'numero_documento' => '1234567890123',
+                'dui' => '12345678-9',
+                'razon_social' => 'Empresa ABC S.A. de C.V.',
+                'nombre_comercial' => 'ABC Comercial',
+                'telefono' => '2234-5678',
+                'email' => 'facturacion@empresaabc.com',
+                'direccion' => 'Col. San Benito, Av. La Revolución, San Salvador',
+                'departamento' => 'San Salvador',
+                'municipio' => 'San Salvador',
+                'distrito' => 'Centro',
+                'giro_comercial' => 'Venta de productos farmacéuticos',
+                'estado' => 'Activo',
+                'fecha_registro' => '2024-01-15',
+                'credito_limite' => 50000.00,
+                'credito_utilizado' => 12500.00
+            ],
+            [
+                'id' => 2,
+                'tipo_documento' => 'NIT',
+                'numero_documento' => '9876543210987',
+                'dui' => '98765432-1',
+                'razon_social' => 'Comercial XYZ Ltda.',
+                'nombre_comercial' => 'XYZ Store',
+                'telefono' => '2345-6789',
+                'email' => 'ventas@comercialxyz.com',
+                'direccion' => 'Col. Escalón, 89 Av. Norte, San Salvador',
+                'departamento' => 'San Salvador',
+                'municipio' => 'San Salvador',
+                'distrito' => 'Escalón',
+                'giro_comercial' => 'Comercio al por menor',
+                'estado' => 'Activo',
+                'fecha_registro' => '2024-02-20',
+                'credito_limite' => 30000.00,
+                'credito_utilizado' => 8750.00
+            ],
+            [
+                'id' => 3,
+                'tipo_documento' => 'DUI',
+                'numero_documento' => '11223344-5',
+                'dui' => '11223344-5',
+                'razon_social' => 'José Manuel Pérez',
+                'nombre_comercial' => 'Servicios JMP',
+                'telefono' => '7890-1234',
+                'email' => 'jm.perez@gmail.com',
+                'direccion' => 'Col. Miramonte, Calle Los Cedros #25, Santa Tecla',
+                'departamento' => 'La Libertad',
+                'municipio' => 'Santa Tecla',
+                'distrito' => 'Centro',
+                'giro_comercial' => 'Servicios profesionales de consultoría',
+                'estado' => 'Activo',
+                'fecha_registro' => '2024-03-10',
+                'credito_limite' => 15000.00,
+                'credito_utilizado' => 0.00
+            ]
+        ];
+
+        return view('documentos-electronicos.clientes.index', compact('clientes'));
+    }
+
+    /**
+     * Mostrar formulario para crear cliente
+     */
+    public function clientesCreate()
+    {
+        return view('documentos-electronicos.clientes.create');
+    }
+
+    /**
+     * Guardar nuevo cliente
+     */
+    public function clientesStore(Request $request)
+    {
+        // Validación básica
+        $request->validate([
+            'tipo_documento' => 'required|in:NIT,DUI',
+            'numero_documento' => 'required|string|max:20',
+            'razon_social' => 'required|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'direccion' => 'required|string|max:500',
+            'departamento' => 'required|string|max:100',
+            'municipio' => 'required|string|max:100',
+            'giro_comercial' => 'required|string|max:255'
+        ]);
+
+        // Aquí normalmente guardarías en la base de datos
+        // Cliente::create($request->all());
+
+        return redirect()->route('documentos-electronicos.clientes.index')
+                        ->with('success', 'Cliente registrado exitosamente');
+    }
+
+    /**
+     * Mostrar detalles de un cliente
+     */
+    public function clientesShow($id)
+    {
+        // Datos simulados del cliente
+        $cliente = [
+            'id' => $id,
+            'tipo_documento' => 'NIT',
+            'numero_documento' => '1234567890123',
+            'dui' => '12345678-9',
+            'razon_social' => 'Empresa ABC S.A. de C.V.',
+            'nombre_comercial' => 'ABC Comercial',
+            'telefono' => '2234-5678',
+            'email' => 'facturacion@empresaabc.com',
+            'direccion' => 'Col. San Benito, Av. La Revolución, San Salvador',
+            'departamento' => 'San Salvador',
+            'municipio' => 'San Salvador',
+            'distrito' => 'Centro',
+            'giro_comercial' => 'Venta de productos farmacéuticos',
+            'estado' => 'Activo',
+            'fecha_registro' => '2024-01-15',
+            'credito_limite' => 50000.00,
+            'credito_utilizado' => 12500.00
+        ];
+
+        // Historial de facturas (simulado)
+        $facturas = [
+            [
+                'numero' => 'FE-2024-001',
+                'fecha' => '2024-10-20',
+                'monto' => 5800.00,
+                'estado' => 'Pagada'
+            ],
+            [
+                'numero' => 'FE-2024-010',
+                'fecha' => '2024-10-15',
+                'monto' => 3200.00,
+                'estado' => 'Pendiente'
+            ]
+        ];
+
+        return view('documentos-electronicos.clientes.show', compact('cliente', 'facturas'));
+    }
+
+    /**
+     * Mostrar formulario para editar cliente
+     */
+    public function clientesEdit($id)
+    {
+        // Datos simulados del cliente
+        $cliente = [
+            'id' => $id,
+            'tipo_documento' => 'NIT',
+            'numero_documento' => '1234567890123',
+            'dui' => '12345678-9',
+            'razon_social' => 'Empresa ABC S.A. de C.V.',
+            'nombre_comercial' => 'ABC Comercial',
+            'telefono' => '2234-5678',
+            'email' => 'facturacion@empresaabc.com',
+            'direccion' => 'Col. San Benito, Av. La Revolución, San Salvador',
+            'departamento' => 'San Salvador',
+            'municipio' => 'San Salvador',
+            'distrito' => 'Centro',
+            'giro_comercial' => 'Venta de productos farmacéuticos',
+            'credito_limite' => 50000.00
+        ];
+
+        return view('documentos-electronicos.clientes.edit', compact('cliente'));
+    }
+
+    /**
+     * Actualizar cliente
+     */
+    public function clientesUpdate(Request $request, $id)
+    {
+        // Validación básica
+        $request->validate([
+            'tipo_documento' => 'required|in:NIT,DUI',
+            'numero_documento' => 'required|string|max:20',
+            'razon_social' => 'required|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'direccion' => 'required|string|max:500',
+            'departamento' => 'required|string|max:100',
+            'municipio' => 'required|string|max:100',
+            'giro_comercial' => 'required|string|max:255'
+        ]);
+
+        // Aquí normalmente actualizarías en la base de datos
+        // $cliente = Cliente::findOrFail($id);
+        // $cliente->update($request->all());
+
+        return redirect()->route('documentos-electronicos.clientes.index')
+                        ->with('success', 'Cliente actualizado exitosamente');
+    }
+
+    /**
+     * Eliminar cliente
+     */
+    public function clientesDestroy($id)
+    {
+        // Aquí normalmente eliminarías de la base de datos
+        // $cliente = Cliente::findOrFail($id);
+        // $cliente->delete();
+
+        return redirect()->route('documentos-electronicos.clientes.index')
+                        ->with('success', 'Cliente eliminado exitosamente');
+    }
+
+    /**
+     * Buscar clientes (para AJAX)
+     */
+    public function clientesBuscar($term)
+    {
+        // Datos simulados de búsqueda
+        $clientes = [
+            [
+                'id' => 1,
+                'numero_documento' => '1234567890123',
+                'razon_social' => 'Empresa ABC S.A. de C.V.',
+                'telefono' => '2234-5678',
+                'email' => 'facturacion@empresaabc.com'
+            ],
+            [
+                'id' => 2,
+                'numero_documento' => '9876543210987',
+                'razon_social' => 'Comercial XYZ Ltda.',
+                'telefono' => '2345-6789',
+                'email' => 'ventas@comercialxyz.com'
+            ]
+        ];
+
+        // Filtrar clientes que coincidan con el término de búsqueda
+        $resultados = array_filter($clientes, function($cliente) use ($term) {
+            return strpos(strtolower($cliente['razon_social']), strtolower($term)) !== false ||
+                   strpos($cliente['numero_documento'], $term) !== false;
+        });
+
+        return response()->json(array_values($resultados));
+    }
 }

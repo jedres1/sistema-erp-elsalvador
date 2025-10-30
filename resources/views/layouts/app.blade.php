@@ -187,9 +187,14 @@
                             Gestión de Facturas
                         </a>
                         
-                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
+                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.index') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
                             <i class="fas fa-file-digital"></i>
                             Documentos Electrónicos
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.clientes.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.clientes.index') }}">
+                            <i class="fas fa-users"></i>
+                            Gestión de Clientes
                         </a>
                     </div>
                     
