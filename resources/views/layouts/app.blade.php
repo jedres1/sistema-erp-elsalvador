@@ -192,7 +192,12 @@
                             Gestión de Clientes
                         </a>
                         
-                        <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.index') }}">
+                        <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.proveedores.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.proveedores.index') }}">
+                            <i class="fas fa-truck"></i>
+                            Gestión de Proveedores
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.*') && !request()->routeIs('cuentas-por-cobrar.proveedores.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.index') }}">
                             <i class="fas fa-hand-holding-usd"></i>
                             Cuentas por Cobrar
                         </a>

@@ -100,6 +100,19 @@ Route::prefix('cuentas-por-cobrar')->name('cuentas-por-cobrar.')->group(function
     Route::get('/reportes/antiguedad', [App\Http\Controllers\CuentasPorCobrarController::class, 'reporteAntiguedad'])->name('reporte-antiguedad');
     Route::get('/exportar/excel', [App\Http\Controllers\CuentasPorCobrarController::class, 'exportarExcel'])->name('exportar-excel');
     Route::post('/{id}/recordatorio', [App\Http\Controllers\CuentasPorCobrarController::class, 'enviarRecordatorio'])->name('enviar-recordatorio');
+    
+    // Rutas para gestión de proveedores
+    Route::prefix('proveedores')->name('proveedores.')->group(function () {
+        Route::get('/', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresIndex'])->name('index');
+        Route::get('/create', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresCreate'])->name('create');
+        Route::post('/', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresStore'])->name('store');
+        Route::post('/ajax', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresStoreAjax'])->name('store.ajax');
+        Route::get('/{id}', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresShow'])->name('show');
+        Route::get('/{id}/edit', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresEdit'])->name('edit');
+        Route::put('/{id}', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresUpdate'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresDestroy'])->name('destroy');
+        Route::get('/buscar/{term}', [App\Http\Controllers\CuentasPorCobrarController::class, 'proveedoresBuscar'])->name('buscar');
+    });
 });
 
 // Rutas para Inventario
