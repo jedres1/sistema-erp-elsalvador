@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome para iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- CSS personalizado -->
     <link href="{{ asset('css/accounts.css') }}" rel="stylesheet">
     <style>
@@ -220,7 +222,7 @@
                             Compras
                         </a>
                         
-                        <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.proveedores.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.proveedores.index') }}">
+                        <a class="nav-link" href="#" onclick="abrirModalProveedor()" data-bs-toggle="tooltip" title="Crear nuevo proveedor">
                             <i class="fas fa-truck"></i>
                             Proveedores
                         </a>
@@ -245,10 +247,10 @@
         </div>
     </div>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
         function toggleSection(sectionId) {
@@ -286,8 +288,262 @@
                 }
             });
         });
+        
+        // Función para abrir modal de proveedor
+        function abrirModalProveedor() {
+            $('#modalProveedor').modal('show');
+        }
+        
+        // Datos geográficos de El Salvador para el modal
+        const geografiaElSalvador = {
+            'San Salvador': {
+                'Zona Metropolitana de San Salvador': ['San Salvador', 'Mejicanos', 'Soyapango', 'Delgado', 'Ilopango', 'San Marcos', 'Tonacatepeque', 'Ayutuxtepeque', 'Apopa', 'Nejapa', 'Cuscatancingo', 'San Martín'],
+                'Zona Norte de San Salvador': ['Aguilares', 'El Paisnal', 'Guazapa'],
+                'Zona Sur de San Salvador': ['Panchimalco', 'Rosario de Mora', 'San Antonio Abad', 'Candelaria', 'San Marcos', 'Escalón', 'Flor Blanca']
+            },
+            'La Libertad': {
+                'Zona Costera': ['La Libertad', 'Puerto de La Libertad', 'Tamanique', 'Teotepeque', 'Tepecoyo', 'Talnique'],
+                'Zona Central': ['Santa Tecla', 'Antiguo Cuscatlán', 'Huizúcar', 'Nuevo Cuscatlán'],
+                'Zona Norte': ['Quezaltepeque', 'San Pablo Tacachico', 'Jayaque', 'Sacacoyo', 'San José Villanueva']
+            },
+            'Santa Ana': {
+                'Zona Central de Santa Ana': ['Santa Ana', 'Coatepeque', 'El Congo'],
+                'Zona Norte': ['Chalchuapa', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santiago de la Frontera', 'Texistepeque'],
+                'Zona Sur': ['Candelaria de la Frontera', 'Santa Rosa Guachipilín', 'Casitas']
+            }
+        };
+        
+        // Inicializar eventos del modal
+        $(document).ready(function() {
+            // Cascada geográfica en el modal
+            $('#modal_departamento').on('change', function() {
+                const departamento = $(this).val();
+                const municipioSelect = $('#modal_municipio');
+                const distritoSelect = $('#modal_distrito');
+                
+                municipioSelect.html('<option value="">Seleccione...</option>');
+                distritoSelect.html('<option value="">Seleccione zona...</option>');
+                
+                if (departamento && geografiaElSalvador[departamento]) {
+                    Object.keys(geografiaElSalvador[departamento]).forEach(zona => {
+                        municipioSelect.append(`<option value="${zona}">${zona}</option>`);
+                    });
+                }
+            });
+            
+            $('#modal_municipio').on('change', function() {
+                const departamento = $('#modal_departamento').val();
+                const zona = $(this).val();
+                const distritoSelect = $('#modal_distrito');
+                
+                distritoSelect.html('<option value="">Seleccione...</option>');
+                
+                if (departamento && zona && geografiaElSalvador[departamento][zona]) {
+                    geografiaElSalvador[departamento][zona].forEach(distrito => {
+                        distritoSelect.append(`<option value="${distrito}">${distrito}</option>`);
+                    });
+                }
+            });
+            
+            // Formato de documento en el modal
+            $('#modal_tipo_documento').on('change', function() {
+                const tipo = $(this).val();
+                const input = $('#modal_numero_documento');
+                
+                switch(tipo) {
+                    case 'NIT':
+                        input.attr('placeholder', 'Ej: 0614-150393-001-2');
+                        break;
+                    case 'DUI':
+                        input.attr('placeholder', 'Ej: 03458721-3');
+                        break;
+                    case 'Pasaporte':
+                        input.attr('placeholder', 'Ej: A1234567');
+                        break;
+                    case 'Carnet de Residente':
+                        input.attr('placeholder', 'Ej: 123456789');
+                        break;
+                    default:
+                        input.attr('placeholder', '');
+                }
+            });
+        });
+        
+        // Función para manejar el formulario del modal
+        function guardarProveedorModal() {
+            const formData = new FormData(document.getElementById('formProveedorModal'));
+            
+            fetch('{{ route("cuentas-por-cobrar.proveedores.store.ajax") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $('#modalProveedor').modal('hide');
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: 'Proveedor creado exitosamente',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    document.getElementById('formProveedorModal').reset();
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message || 'Error al crear el proveedor',
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error de conexión',
+                    icon: 'error'
+                });
+            });
+        }
     </script>
     
     @yield('scripts')
+    
+    <!-- Modal para crear proveedor -->
+    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="modalProveedorLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalProveedorLabel">
+                        <i class="fas fa-truck me-2"></i>
+                        Crear Nuevo Proveedor
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('cuentas-por-cobrar.proveedores.index') }}" class="btn btn-outline-light btn-sm" title="Ver lista completa">
+                            <i class="fas fa-list"></i>
+                        </a>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form id="formProveedorModal">
+                        @csrf
+                        
+                        <!-- Información básica -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="modal_tipo_documento" class="form-label">Tipo de Documento *</label>
+                                <select class="form-select" id="modal_tipo_documento" name="tipo_documento" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="NIT">NIT</option>
+                                    <option value="DUI">DUI</option>
+                                    <option value="Pasaporte">Pasaporte</option>
+                                    <option value="Carnet de Residente">Carnet de Residente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="modal_numero_documento" class="form-label">Número de Documento *</label>
+                                <input type="text" class="form-control" id="modal_numero_documento" name="numero_documento" 
+                                       placeholder="Ej: 0614-150393-001-2" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="modal_razon_social" class="form-label">Razón Social *</label>
+                                <input type="text" class="form-control" id="modal_razon_social" name="razon_social" 
+                                       placeholder="Nombre completo o razón social" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modal_nombre_comercial" class="form-label">Nombre Comercial</label>
+                                <input type="text" class="form-control" id="modal_nombre_comercial" name="nombre_comercial" 
+                                       placeholder="Nombre comercial o marca">
+                            </div>
+                        </div>
+                        
+                        <!-- Información de contacto -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="modal_telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="modal_telefono" name="telefono" 
+                                       placeholder="Ej: 2298-5500">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modal_email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="modal_email" name="email" 
+                                       placeholder="proveedor@empresa.com">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label for="modal_direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="modal_direccion" name="direccion" 
+                                       placeholder="Dirección completa">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="modal_limite_credito" class="form-label">Límite de Crédito</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" min="0" class="form-control" 
+                                           id="modal_limite_credito" name="limite_credito" value="0.00">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ubicación geográfica -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="modal_departamento" class="form-label">Departamento</label>
+                                <select class="form-select" id="modal_departamento" name="departamento">
+                                    <option value="">Seleccione...</option>
+                                    <option value="San Salvador">San Salvador</option>
+                                    <option value="La Libertad">La Libertad</option>
+                                    <option value="Santa Ana">Santa Ana</option>
+                                    <option value="San Miguel">San Miguel</option>
+                                    <option value="Usulután">Usulután</option>
+                                    <option value="Sonsonate">Sonsonate</option>
+                                    <option value="La Paz">La Paz</option>
+                                    <option value="Chalatenango">Chalatenango</option>
+                                    <option value="Ahuachapán">Ahuachapán</option>
+                                    <option value="Cuscatlán">Cuscatlán</option>
+                                    <option value="La Unión">La Unión</option>
+                                    <option value="Morazán">Morazán</option>
+                                    <option value="San Vicente">San Vicente</option>
+                                    <option value="Cabañas">Cabañas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="modal_municipio" class="form-label">Zona/Municipio</label>
+                                <select class="form-select" id="modal_municipio" name="municipio">
+                                    <option value="">Seleccione departamento...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="modal_distrito" class="form-label">Distrito/Ciudad</label>
+                                <select class="form-select" id="modal_distrito" name="distrito">
+                                    <option value="">Seleccione zona...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="guardarProveedorModal()">
+                        <i class="fas fa-save me-1"></i>
+                        Guardar Proveedor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
