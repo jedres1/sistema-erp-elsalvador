@@ -189,7 +189,7 @@
                             Documentos Electrónicos
                         </a>
                         
-                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.clientes.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.clientes.index') }}">
+                        <a class="nav-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}" href="{{ route('clientes.index') }}">
                             <i class="fas fa-users"></i>
                             Clientes
                         </a>

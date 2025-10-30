@@ -11,7 +11,7 @@
             <p class="text-muted">Registra un nuevo cliente para facturación electrónica</p>
         </div>
         <div>
-            <a href="{{ route('documentos-electronicos.clientes.index') }}" class="btn btn-secondary">
+            <a href="{{ route('clientes.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver a Clientes
             </a>
         </div>
@@ -24,7 +24,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Información del Cliente</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('documentos-electronicos.clientes.store') }}" method="POST">
+                    <form action="{{ route('clientes.store') }}" method="POST">
                         @csrf
                         
                         <!-- Información fiscal -->
@@ -225,7 +225,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('documentos-electronicos.clientes.index') }}" class="btn btn-secondary">
+                                    <a href="{{ route('clientes.index') }}" class="btn btn-secondary">
                                         <i class="fas fa-times"></i> Cancelar
                                     </a>
                                     <button type="submit" class="btn btn-primary">

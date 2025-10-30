@@ -14,7 +14,7 @@
             <a href="{{ route('documentos-electronicos.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Documentos Electrónicos
             </a>
-            <a href="{{ route('documentos-electronicos.clientes.create') }}" class="btn btn-primary">
+            <a href="{{ route('clientes.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nuevo Cliente
             </a>
         </div>
@@ -193,11 +193,11 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('documentos-electronicos.clientes.show', $cliente['id']) }}" 
+                                    <a href="{{ route('clientes.show', $cliente['id']) }}" 
                                        class="btn btn-sm btn-outline-info" title="Ver detalles">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('documentos-electronicos.clientes.edit', $cliente['id']) }}" 
+                                    <a href="{{ route('clientes.edit', $cliente['id']) }}" 
                                        class="btn btn-sm btn-outline-primary" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
