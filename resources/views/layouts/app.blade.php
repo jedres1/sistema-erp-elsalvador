@@ -189,7 +189,7 @@
                         
                         <a class="nav-link {{ request()->routeIs('documentos-electronicos.clientes.*') ? 'active' : '' }}" href="{{ route('documentos-electronicos.clientes.index') }}">
                             <i class="fas fa-users"></i>
-                            Gestión de Clientes
+                            Clientes
                         </a>
                         
                         <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.index') }}">
@@ -222,7 +222,7 @@
                         
                         <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.proveedores.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.proveedores.index') }}">
                             <i class="fas fa-truck"></i>
-                            Gestión de Proveedores
+                            Proveedores
                         </a>
                         
                         <a class="nav-link {{ request()->routeIs('cuentas-por-pagar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-pagar.index') }}">
