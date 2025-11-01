@@ -175,23 +175,23 @@
                     <!-- Separador -->
                     <hr class="nav-divider">
                     
-                    <!-- Sección Documentos Electrónicos -->
+                    <!-- Sección Facturación -->
                     <div class="nav-section-header">
-                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('documentos')">
-                            <i class="fas fa-file-digital"></i> Documentos Electrónicos
-                            <i class="fas fa-chevron-down toggle-icon" id="documentos-icon"></i>
+                        <h6 class="text-light text-uppercase fw-bold mb-3 nav-section-toggle" onclick="toggleSection('facturacion')">
+                            <i class="fas fa-file-invoice"></i> Facturación
+                            <i class="fas fa-chevron-down toggle-icon" id="facturacion-icon"></i>
                         </h6>
                     </div>
                     
-                    <div id="documentos-items" class="nav-section-items">
-                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.index') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
-                            <i class="fas fa-file-digital"></i>
-                            Documentos Electrónicos
-                        </a>
-                        
+                    <div id="facturacion-items" class="nav-section-items">
                         <a class="nav-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}" href="{{ route('clientes.index') }}">
                             <i class="fas fa-users"></i>
                             Clientes
+                        </a>
+                        
+                        <a class="nav-link {{ request()->routeIs('documentos-electronicos.index') ? 'active' : '' }}" href="{{ route('documentos-electronicos.index') }}">
+                            <i class="fas fa-file-digital"></i>
+                            Factura Electrónica
                         </a>
                         
                         <a class="nav-link {{ request()->routeIs('cuentas-por-cobrar.*') ? 'active' : '' }}" href="{{ route('cuentas-por-cobrar.index') }}">
@@ -272,7 +272,7 @@
         
         // Restaurar estado desde localStorage al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            const sections = ['contabilidad', 'operaciones'];
+            const sections = ['contabilidad', 'facturacion', 'operaciones'];
             
             sections.forEach(function(sectionId) {
                 const isCollapsed = localStorage.getItem('nav_' + sectionId + '_collapsed') === 'true';
