@@ -25,8 +25,11 @@ class InventarioController extends Controller
     {
         $categorias = $this->getCategorias();
         $proveedores = $this->getProveedores();
+        $plantillas = \App\Models\PlantillaContable::where('tipo', 'articulo')
+                                                    ->where('activo', true)
+                                                    ->get();
         
-        return view('inventario.create', compact('categorias', 'proveedores'));
+        return view('inventario.create', compact('categorias', 'proveedores', 'plantillas'));
     }
 
     /**
@@ -34,17 +37,30 @@ class InventarioController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'codigo' => 'required|string|unique:productos,codigo',
-            'nombre' => 'required|string|max:255',
-            'categoria_id' => 'required|integer',
-            'precio_compra' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:200',
+            'descripcion' => 'nullable|string',
+            'tipo' => 'required|in:producto,servicio',
+            'unidad_medida' => 'required|string|max:20',
             'precio_venta' => 'required|numeric|min:0',
-            'stock_minimo' => 'required|integer|min:0',
-            'stock_actual' => 'required|integer|min:0',
+            'precio_compra' => 'required|numeric|min:0',
+            'existencia' => 'required|numeric|min:0',
+            'existencia_minima' => 'required|numeric|min:0',
+            'maneja_inventario' => 'boolean',
+            'plantilla_contable_id' => 'nullable|exists:plantillas_contables,id',
+            'estado' => 'required|in:A,I'
         ]);
 
-        // Aquí se guardaría el producto en la base de datos
+        // Generar código automático
+        $ultimoProducto = \App\Models\Producto::orderBy('id', 'desc')->first();
+        $validated['codigo'] = 'PROD-' . str_pad(($ultimoProducto ? $ultimoProducto->id + 1 : 1), 6, '0', STR_PAD_LEFT);
+
+        // Convertir checkbox a boolean
+        $validated['maneja_inventario'] = $request->has('maneja_inventario');
+
+        // Crear el producto
+        $producto = \App\Models\Producto::create($validated);
+
         return redirect()->route('inventario.index')
                          ->with('success', 'Producto creado exitosamente');
     }
@@ -72,12 +88,15 @@ class InventarioController extends Controller
         $producto = $this->getProducto($id);
         $categorias = $this->getCategorias();
         $proveedores = $this->getProveedores();
+        $plantillas = \App\Models\PlantillaContable::where('tipo', 'articulo')
+                                                    ->where('activo', true)
+                                                    ->get();
         
         if (!$producto) {
             abort(404);
         }
         
-        return view('inventario.edit', compact('producto', 'categorias', 'proveedores'));
+        return view('inventario.edit', compact('producto', 'categorias', 'proveedores', 'plantillas'));
     }
 
     /**
@@ -85,17 +104,27 @@ class InventarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'codigo' => 'required|string',
-            'nombre' => 'required|string|max:255',
-            'categoria_id' => 'required|integer',
-            'precio_compra' => 'required|numeric|min:0',
+        $producto = \App\Models\Producto::findOrFail($id);
+
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:200',
+            'descripcion' => 'nullable|string',
+            'tipo' => 'required|in:producto,servicio',
+            'unidad_medida' => 'required|string|max:20',
             'precio_venta' => 'required|numeric|min:0',
-            'stock_minimo' => 'required|integer|min:0',
-            'stock_actual' => 'required|integer|min:0',
+            'precio_compra' => 'required|numeric|min:0',
+            'existencia' => 'required|numeric|min:0',
+            'existencia_minima' => 'required|numeric|min:0',
+            'maneja_inventario' => 'boolean',
+            'plantilla_contable_id' => 'nullable|exists:plantillas_contables,id',
+            'estado' => 'required|in:A,I'
         ]);
 
-        // Aquí se actualizaría el producto en la base de datos
+        // Convertir checkbox a boolean
+        $validated['maneja_inventario'] = $request->has('maneja_inventario');
+
+        $producto->update($validated);
+
         return redirect()->route('inventario.index')
                          ->with('success', 'Producto actualizado exitosamente');
     }
@@ -105,7 +134,9 @@ class InventarioController extends Controller
      */
     public function destroy($id)
     {
-        // Aquí se eliminaría el producto de la base de datos
+        $producto = \App\Models\Producto::findOrFail($id);
+        $producto->delete();
+
         return redirect()->route('inventario.index')
                          ->with('success', 'Producto eliminado exitosamente');
     }
@@ -150,41 +181,7 @@ class InventarioController extends Controller
      */
     private function getProductos()
     {
-        return [
-            [
-                'id' => 1,
-                'codigo' => 'PROD001',
-                'nombre' => 'Laptop Dell Inspiron',
-                'categoria' => 'Tecnología',
-                'stock_actual' => 15,
-                'stock_minimo' => 5,
-                'precio_compra' => 12000.00,
-                'precio_venta' => 15000.00,
-                'estado' => 'normal'
-            ],
-            [
-                'id' => 2,
-                'codigo' => 'PROD002',
-                'nombre' => 'Mouse Inalámbrico',
-                'categoria' => 'Accesorios',
-                'stock_actual' => 3,
-                'stock_minimo' => 10,
-                'precio_compra' => 250.00,
-                'precio_venta' => 350.00,
-                'estado' => 'bajo'
-            ],
-            [
-                'id' => 3,
-                'codigo' => 'PROD003',
-                'nombre' => 'Monitor 24 pulgadas',
-                'categoria' => 'Tecnología',
-                'stock_actual' => 0,
-                'stock_minimo' => 3,
-                'precio_compra' => 3500.00,
-                'precio_venta' => 4500.00,
-                'estado' => 'agotado'
-            ]
-        ];
+        return \App\Models\Producto::orderBy('nombre', 'asc')->get();
     }
 
     /**
@@ -192,11 +189,17 @@ class InventarioController extends Controller
      */
     private function getEstadisticasInventario()
     {
+        $productos = \App\Models\Producto::all();
+        
         return [
-            'total_productos' => 156,
-            'valor_inventario' => 1250000.00,
-            'productos_bajo_stock' => 8,
-            'productos_agotados' => 3
+            'total_productos' => $productos->count(),
+            'valor_inventario' => $productos->sum(function($p) { 
+                return $p->existencia * $p->precio_compra; 
+            }),
+            'productos_bajo_stock' => $productos->filter(function($p) { 
+                return $p->existencia > 0 && $p->existencia <= $p->existencia_minima; 
+            })->count(),
+            'productos_agotados' => $productos->where('existencia', 0)->count()
         ];
     }
 
@@ -241,8 +244,7 @@ class InventarioController extends Controller
      */
     private function getProducto($id)
     {
-        $productos = $this->getProductos();
-        return collect($productos)->firstWhere('id', (int)$id);
+        return \App\Models\Producto::find($id);
     }
 
     /**

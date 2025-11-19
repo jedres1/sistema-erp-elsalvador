@@ -84,7 +84,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Clientes Activos</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ collect($clientes)->where('estado', 'Activo')->count() }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $clientes->where('estado', 'A')->count() }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -99,7 +99,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Límite Crédito Total</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format(collect($clientes)->sum('credito_limite'), 2) }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format($clientes->sum('limite_credito'), 2) }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-credit-card fa-2x text-gray-300"></i>
@@ -114,7 +114,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Crédito Utilizado</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format(collect($clientes)->sum('credito_utilizado'), 2) }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">$0.00</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -150,59 +150,59 @@
                         @foreach($clientes as $cliente)
                         <tr>
                             <td>
-                                <span class="badge {{ $cliente['tipo_documento'] == 'NIT' ? 'bg-primary' : 'bg-info' }}">
-                                    {{ $cliente['tipo_documento'] }}
+                                <span class="badge {{ $cliente->tipo_documento == 'NIT' ? 'bg-primary' : 'bg-info' }}">
+                                    {{ $cliente->tipo_documento }}
                                 </span>
                             </td>
-                            <td class="font-monospace">{{ $cliente['numero_documento'] }}</td>
+                            <td class="font-monospace">{{ $cliente->numero_documento }}</td>
                             <td>
-                                <div class="fw-bold">{{ $cliente['razon_social'] }}</div>
-                                @if($cliente['nombre_comercial'])
-                                    <small class="text-muted">{{ $cliente['nombre_comercial'] }}</small>
+                                <div class="fw-bold">{{ $cliente->nombre }}</div>
+                                @if($cliente->nombre_comercial)
+                                    <small class="text-muted">{{ $cliente->nombre_comercial }}</small>
                                 @endif
                             </td>
                             <td>
-                                @if($cliente['telefono'])
-                                    <i class="fas fa-phone text-muted me-1"></i>{{ $cliente['telefono'] }}
+                                @if($cliente->telefono)
+                                    <i class="fas fa-phone text-muted me-1"></i>{{ $cliente->telefono }}
                                 @else
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
                             <td>
-                                @if($cliente['email'])
-                                    <a href="mailto:{{ $cliente['email'] }}" class="text-decoration-none">
-                                        <i class="fas fa-envelope text-muted me-1"></i>{{ $cliente['email'] }}
+                                @if($cliente->email)
+                                    <a href="mailto:{{ $cliente->email }}" class="text-decoration-none">
+                                        <i class="fas fa-envelope text-muted me-1"></i>{{ $cliente->email }}
                                     </a>
                                 @else
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
                             <td>
-                                <small>{{ $cliente['municipio'] }}, {{ $cliente['departamento'] }}</small>
+                                <small>{{ $cliente->direccion ?? '-' }}</small>
                             </td>
                             <td>
                                 <div class="text-end">
-                                    <div class="fw-bold text-success">${{ number_format($cliente['credito_limite'], 2) }}</div>
-                                    <small class="text-muted">Usado: ${{ number_format($cliente['credito_utilizado'], 2) }}</small>
+                                    <div class="fw-bold text-success">${{ number_format($cliente->limite_credito ?? 0, 2) }}</div>
+                                    <small class="text-muted">Disponible</small>
                                 </div>
                             </td>
                             <td>
-                                <span class="badge {{ $cliente['estado'] == 'Activo' ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $cliente['estado'] }}
+                                <span class="badge {{ $cliente->estado == 'A' ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ $cliente->estado == 'A' ? 'Activo' : 'Inactivo' }}
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('clientes.show', $cliente['id']) }}" 
+                                    <a href="{{ route('clientes.show', $cliente->id) }}" 
                                        class="btn btn-sm btn-outline-info" title="Ver detalles">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('clientes.edit', $cliente['id']) }}" 
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}" 
                                        class="btn btn-sm btn-outline-primary" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-danger" 
-                                            onclick="confirmarEliminacion({{ $cliente['id'] }})" title="Eliminar">
+                                            onclick="confirmarEliminacion({{ $cliente->id }})" title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

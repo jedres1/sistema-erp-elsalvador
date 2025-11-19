@@ -138,24 +138,24 @@
                                 @foreach($productos as $producto)
                                 <tr>
                                     <td>
-                                        <code>{{ $producto['codigo'] }}</code>
+                                        <code>{{ $producto->codigo }}</code>
                                     </td>
                                     <td>
-                                        <strong>{{ $producto['nombre'] }}</strong>
+                                        <strong>{{ $producto->nombre }}</strong>
                                     </td>
-                                    <td>{{ $producto['categoria'] }}</td>
+                                    <td>{{ $producto->tipo == 'producto' ? 'Bien' : 'Servicio' }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $producto['estado'] === 'normal' ? 'success' : ($producto['estado'] === 'bajo' ? 'warning' : 'danger') }}">
-                                            {{ $producto['stock_actual'] }}
+                                        <span class="badge bg-{{ $producto->existencia > $producto->existencia_minima ? 'success' : ($producto->existencia > 0 && $producto->existencia <= $producto->existencia_minima ? 'warning' : 'danger') }}">
+                                            {{ $producto->existencia }}
                                         </span>
                                     </td>
-                                    <td>{{ $producto['stock_minimo'] }}</td>
-                                    <td>${{ number_format($producto['precio_compra'], 2) }}</td>
-                                    <td>${{ number_format($producto['precio_venta'], 2) }}</td>
+                                    <td>{{ $producto->existencia_minima }}</td>
+                                    <td>${{ number_format($producto->precio_compra, 2) }}</td>
+                                    <td>${{ number_format($producto->precio_venta, 2) }}</td>
                                     <td>
-                                        @if($producto['estado'] === 'normal')
+                                        @if($producto->existencia > $producto->existencia_minima)
                                             <span class="badge bg-success">Normal</span>
-                                        @elseif($producto['estado'] === 'bajo')
+                                        @elseif($producto->existencia > 0 && $producto->existencia <= $producto->existencia_minima)
                                             <span class="badge bg-warning">Bajo Stock</span>
                                         @else
                                             <span class="badge bg-danger">Agotado</span>
@@ -163,20 +163,20 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('inventario.show', $producto['id']) }}" 
+                                            <a href="{{ route('inventario.show', $producto->id) }}" 
                                                class="btn btn-sm btn-outline-info" title="Ver">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('inventario.edit', $producto['id']) }}" 
+                                            <a href="{{ route('inventario.edit', $producto->id) }}" 
                                                class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button class="btn btn-sm btn-outline-success" 
-                                                    title="Entrada" onclick="entradaRapida({{ $producto['id'] }}, '{{ $producto['nombre'] }}')">
+                                                    title="Entrada" onclick="entradaRapida({{ $producto->id }}, '{{ $producto->nombre }}')">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                             <button class="btn btn-sm btn-outline-warning" 
-                                                    title="Salida" onclick="salidaRapida({{ $producto['id'] }}, '{{ $producto['nombre'] }}')">
+                                                    title="Salida" onclick="salidaRapida({{ $producto->id }}, '{{ $producto->nombre }}')">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </div>
@@ -208,7 +208,7 @@
                         <select class="form-select" name="producto_id" required>
                             <option value="">Seleccionar producto...</option>
                             @foreach($productos as $producto)
-                            <option value="{{ $producto['id'] }}">{{ $producto['codigo'] }} - {{ $producto['nombre'] }}</option>
+                            <option value="{{ $producto->id }}">{{ $producto->codigo }} - {{ $producto->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -259,7 +259,7 @@
                         <select class="form-select" name="producto_id" required>
                             <option value="">Seleccionar producto...</option>
                             @foreach($productos as $producto)
-                            <option value="{{ $producto['id'] }}">{{ $producto['codigo'] }} - {{ $producto['nombre'] }}</option>
+                            <option value="{{ $producto->id }}">{{ $producto->codigo }} - {{ $producto->nombre }}</option>
                             @endforeach
                         </select>
                     </div>

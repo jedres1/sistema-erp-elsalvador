@@ -13,14 +13,14 @@
                             <i class="fas fa-plus me-2"></i>
                             Crear Nuevo Proveedor
                         </h5>
-                        <a href="{{ route('cuentas-por-cobrar.proveedores.index') }}" class="btn btn-light btn-sm">
+                        <a href="{{ route('proveedores.index') }}" class="btn btn-light btn-sm">
                             <i class="fas fa-arrow-left me-1"></i>
                             Volver a Lista
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form id="formProveedor" action="{{ route('cuentas-por-cobrar.proveedores.store') }}" method="POST">
+                    <form id="formProveedor" action="{{ route('proveedores.store') }}" method="POST">
                         @csrf
                         
                         <!-- Información básica -->
@@ -193,11 +193,50 @@
                             </div>
                         </div>
 
+                        <!-- Configuración Contable -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="text-primary mb-3">
+                                    <i class="fas fa-book"></i> Configuración Contable
+                                </h6>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label for="plantilla_contable_id" class="form-label">
+                                    Plantilla Contable
+                                    <i class="fas fa-info-circle text-info" 
+                                       data-bs-toggle="tooltip" 
+                                       title="Seleccione la plantilla contable que se aplicará automáticamente a las transacciones con este proveedor"></i>
+                                </label>
+                                <select class="form-select @error('plantilla_contable_id') is-invalid @enderror" 
+                                        id="plantilla_contable_id" name="plantilla_contable_id">
+                                    <option value="">Sin plantilla asignada</option>
+                                    @foreach(\App\Models\PlantillaContable::where('tipo', 'proveedor')->get() as $plantilla)
+                                        <option value="{{ $plantilla->id }}" {{ old('plantilla_contable_id') == $plantilla->id ? 'selected' : '' }}>
+                                            {{ $plantilla->nombre }} - {{ $plantilla->descripcion }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('plantilla_contable_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <div class="form-text">
+                                    <i class="fas fa-lightbulb"></i> 
+                                    Esta plantilla define las cuentas contables que se usarán automáticamente en compras y pagos.
+                                    <a href="{{ route('plantillas-contables.index') }}" target="_blank" class="ms-2">
+                                        <i class="fas fa-external-link-alt"></i> Administrar plantillas
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Botones -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('cuentas-por-cobrar.proveedores.index') }}" class="btn btn-secondary">
+                                    <a href="{{ route('proveedores.index') }}" class="btn btn-secondary">
                                         <i class="fas fa-times me-1"></i>
                                         Cancelar
                                     </a>

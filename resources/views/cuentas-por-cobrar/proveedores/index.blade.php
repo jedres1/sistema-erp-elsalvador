@@ -13,7 +13,7 @@
                             <i class="fas fa-truck me-2"></i>
                             Proveedores
                         </h5>
-                        <a href="{{ route('cuentas-por-cobrar.proveedores.create') }}" class="btn btn-light btn-sm">
+                        <a href="{{ route('proveedores.create') }}" class="btn btn-light btn-sm">
                             <i class="fas fa-plus me-1"></i>
                             Nuevo Proveedor
                         </a>
@@ -139,10 +139,10 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.show', 1) }}" class="btn btn-outline-info" title="Ver">
+                                            <a href="{{ route('proveedores.show', 1) }}" class="btn btn-outline-info" title="Ver">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.edit', 1) }}" class="btn btn-outline-warning" title="Editar">
+                                            <a href="{{ route('proveedores.edit', 1) }}" class="btn btn-outline-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="eliminarProveedor(1)">
@@ -175,10 +175,10 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.show', 2) }}" class="btn btn-outline-info" title="Ver">
+                                            <a href="{{ route('proveedores.show', 2) }}" class="btn btn-outline-info" title="Ver">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.edit', 2) }}" class="btn btn-outline-warning" title="Editar">
+                                            <a href="{{ route('proveedores.edit', 2) }}" class="btn btn-outline-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="eliminarProveedor(2)">
@@ -211,10 +211,10 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.show', 3) }}" class="btn btn-outline-info" title="Ver">
+                                            <a href="{{ route('proveedores.show', 3) }}" class="btn btn-outline-info" title="Ver">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('cuentas-por-cobrar.proveedores.edit', 3) }}" class="btn btn-outline-warning" title="Editar">
+                                            <a href="{{ route('proveedores.edit', 3) }}" class="btn btn-outline-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="eliminarProveedor(3)">

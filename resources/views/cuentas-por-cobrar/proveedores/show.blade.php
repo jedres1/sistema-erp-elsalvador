@@ -14,11 +14,11 @@
                             Detalle del Proveedor
                         </h5>
                         <div class="btn-group" role="group">
-                            <a href="{{ route('cuentas-por-cobrar.proveedores.edit', 1) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('proveedores.edit', 1) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit me-1"></i>
                                 Editar
                             </a>
-                            <a href="{{ route('cuentas-por-cobrar.proveedores.index') }}" class="btn btn-light btn-sm">
+                            <a href="{{ route('proveedores.index') }}" class="btn btn-light btn-sm">
                                 <i class="fas fa-arrow-left me-1"></i>
                                 Volver a Lista
                             </a>

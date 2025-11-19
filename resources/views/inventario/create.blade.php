@@ -42,29 +42,23 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Código del Producto *</label>
-                                    <input type="text" class="form-control @error('codigo') is-invalid @enderror" 
-                                           name="codigo" value="{{ old('codigo') }}" required 
-                                           placeholder="Ej: PROD001">
-                                    @error('codigo')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Código único para identificar el producto</div>
+                                    <label class="form-label">Código del Producto</label>
+                                    <input type="text" class="form-control" 
+                                           value="(Se generará automáticamente)" readonly 
+                                           placeholder="Se generará automáticamente">
+                                    <div class="form-text">El código se generará automáticamente al guardar</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Categoría *</label>
-                                    <select class="form-select @error('categoria_id') is-invalid @enderror" 
-                                            name="categoria_id" required>
-                                        <option value="">Seleccionar categoría...</option>
-                                        @foreach($categorias as $categoria)
-                                        <option value="{{ $categoria['id'] }}" {{ old('categoria_id') == $categoria['id'] ? 'selected' : '' }}>
-                                            {{ $categoria['nombre'] }}
-                                        </option>
-                                        @endforeach
+                                    <label class="form-label">Tipo *</label>
+                                    <select class="form-select @error('tipo') is-invalid @enderror" 
+                                            name="tipo" required>
+                                        <option value="">Seleccionar tipo...</option>
+                                        <option value="producto" {{ old('tipo') == 'producto' ? 'selected' : '' }}>Bien</option>
+                                        <option value="servicio" {{ old('tipo') == 'servicio' ? 'selected' : '' }}>Servicio</option>
                                     </select>
-                                    @error('categoria_id')
+                                    @error('tipo')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -127,11 +121,11 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Stock Inicial *</label>
-                                    <input type="number" class="form-control @error('stock_actual') is-invalid @enderror" 
-                                           name="stock_actual" value="{{ old('stock_actual', 0) }}" 
-                                           min="0" required>
-                                    @error('stock_actual')
+                                    <label class="form-label">Stock Actual *</label>
+                                    <input type="number" class="form-control @error('existencia') is-invalid @enderror" 
+                                           name="existencia" value="{{ old('existencia', 0) }}" 
+                                           min="0" step="0.01" required>
+                                    @error('existencia')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -139,10 +133,10 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label">Stock Mínimo *</label>
-                                    <input type="number" class="form-control @error('stock_minimo') is-invalid @enderror" 
-                                           name="stock_minimo" value="{{ old('stock_minimo', 5) }}" 
-                                           min="0" required>
-                                    @error('stock_minimo')
+                                    <input type="number" class="form-control @error('existencia_minima') is-invalid @enderror" 
+                                           name="existencia_minima" value="{{ old('existencia_minima', 5) }}" 
+                                           min="0" step="0.01" required>
+                                    @error('existencia_minima')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <div class="form-text">Cantidad mínima para generar alerta</div>
@@ -204,6 +198,33 @@
                                         <option value="inactivo" {{ old('estado') === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
                                         <option value="descontinuado" {{ old('estado') === 'descontinuado' ? 'selected' : '' }}>Descontinuado</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-file-invoice"></i> Plantilla Contable
+                                    </label>
+                                    <select class="form-select @error('plantilla_contable_id') is-invalid @enderror" 
+                                            name="plantilla_contable_id">
+                                        <option value="">Sin plantilla contable</option>
+                                        @foreach($plantillas as $plantilla)
+                                        <option value="{{ $plantilla->id }}" {{ old('plantilla_contable_id') == $plantilla->id ? 'selected' : '' }}>
+                                            {{ $plantilla->nombre }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('plantilla_contable_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle text-info"></i>
+                                        La plantilla contable permite generar partidas automáticas al facturar este producto.
+                                        <a href="{{ route('plantillas-contables.index') }}" target="_blank">Administrar plantillas</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -386,57 +407,31 @@ function calcularMargen() {
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('productoForm');
     
-    // Validar código único (simulado)
-    const codigoInput = document.querySelector('input[name="codigo"]');
-    codigoInput.addEventListener('blur', function() {
-        // Aquí se podría implementar una validación AJAX para verificar unicidad
-        const codigo = this.value.trim();
-        if (codigo.length < 3) {
-            this.classList.add('is-invalid');
-            this.nextElementSibling.textContent = 'El código debe tener al menos 3 caracteres';
-        } else {
-            this.classList.remove('is-invalid');
+    // Validación de existencia mínima vs existencia
+    const existenciaInput = document.querySelector('input[name="existencia"]');
+    const existenciaMinimaInput = document.querySelector('input[name="existencia_minima"]');
+    
+    if (existenciaInput && existenciaMinimaInput) {
+        function validarExistencia() {
+            const actual = parseFloat(existenciaInput.value) || 0;
+            const minima = parseFloat(existenciaMinimaInput.value) || 0;
+            
+            if (actual < minima && actual > 0) {
+                existenciaInput.classList.add('is-warning');
+            } else {
+                existenciaInput.classList.remove('is-warning');
+            }
         }
+        
+        existenciaInput.addEventListener('input', validarExistencia);
+        existenciaMinimaInput.addEventListener('input', validarExistencia);
+    }
+    
+    // Permitir envío del formulario
+    form.addEventListener('submit', function(e) {
+        console.log('Formulario enviándose...');
     });
-    
-    // Validación de stock mínimo vs inicial
-    const stockActual = document.querySelector('input[name="stock_actual"]');
-    const stockMinimo = document.querySelector('input[name="stock_minimo"]');
-    
-    function validarStock() {
-        const actual = parseInt(stockActual.value) || 0;
-        const minimo = parseInt(stockMinimo.value) || 0;
-        
-        if (actual < minimo && actual > 0) {
-            stockActual.classList.add('is-warning');
-            // Mostrar advertencia visual
-        } else {
-            stockActual.classList.remove('is-warning');
-        }
-    }
-    
-    stockActual.addEventListener('input', validarStock);
-    stockMinimo.addEventListener('input', validarStock);
 });
-
-// Generar código automático basado en categoría y nombre
-function generarCodigoAutomatico() {
-    const categoriaSelect = document.querySelector('select[name="categoria_id"]');
-    const nombreInput = document.querySelector('input[name="nombre"]');
-    const codigoInput = document.querySelector('input[name="codigo"]');
-    
-    if (categoriaSelect.value && nombreInput.value && !codigoInput.value) {
-        const categoria = categoriaSelect.options[categoriaSelect.selectedIndex].text.substring(0, 3).toUpperCase();
-        const nombre = nombreInput.value.substring(0, 3).toUpperCase();
-        const numero = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-        
-        codigoInput.value = categoria + nombre + numero;
-    }
-}
-
-// Eventos para generación automática de código
-document.querySelector('select[name="categoria_id"]').addEventListener('change', generarCodigoAutomatico);
-document.querySelector('input[name="nombre"]').addEventListener('blur', generarCodigoAutomatico);
 </script>
 
 <style>

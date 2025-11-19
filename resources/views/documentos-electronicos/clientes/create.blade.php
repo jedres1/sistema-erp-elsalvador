@@ -74,11 +74,11 @@
                                 </h5>
                             </div>
                             <div class="col-md-6">
-                                <label for="razon_social" class="form-label">Razón Social <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('razon_social') is-invalid @enderror" 
-                                       id="razon_social" name="razon_social" value="{{ old('razon_social') }}" 
+                                <label for="nombre" class="form-label">Razón Social <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('nombre') is-invalid @enderror" 
+                                       id="nombre" name="nombre" value="{{ old('nombre') }}" 
                                        placeholder="Nombre legal de la empresa" required>
-                                @error('razon_social')
+                                @error('nombre')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -92,11 +92,11 @@
                                 @enderror
                             </div>
                             <div class="col-12 mt-3">
-                                <label for="giro_comercial" class="form-label">Giro Comercial <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('giro_comercial') is-invalid @enderror" 
-                                       id="giro_comercial" name="giro_comercial" value="{{ old('giro_comercial') }}" 
+                                <label for="giro" class="form-label">Giro Comercial <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('giro') is-invalid @enderror" 
+                                       id="giro" name="giro" value="{{ old('giro') }}" 
                                        placeholder="Actividad principal del cliente" required>
-                                @error('giro_comercial')
+                                @error('giro')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -199,14 +199,14 @@
                                 </h5>
                             </div>
                             <div class="col-md-6">
-                                <label for="credito_limite" class="form-label">Límite de Crédito</label>
+                                <label for="limite_credito" class="form-label">Límite de Crédito</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control @error('credito_limite') is-invalid @enderror" 
-                                           id="credito_limite" name="credito_limite" value="{{ old('credito_limite', '0.00') }}" 
+                                    <input type="number" class="form-control @error('limite_credito') is-invalid @enderror" 
+                                           id="limite_credito" name="limite_credito" value="{{ old('limite_credito', '0.00') }}" 
                                            step="0.01" min="0" placeholder="0.00">
                                 </div>
-                                @error('credito_limite')
+                                @error('limite_credito')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -216,6 +216,57 @@
                                        id="dias_credito" name="dias_credito" value="{{ old('dias_credito', '30') }}" 
                                        min="0" max="365" placeholder="30">
                                 @error('dias_credito')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Plantilla Contable -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary border-bottom pb-2 mb-3">
+                                    <i class="fas fa-file-invoice"></i> Configuración Contable
+                                </h5>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="plantilla_contable_id" class="form-label">
+                                    <i class="fas fa-file-invoice"></i> Plantilla Contable
+                                </label>
+                                <select class="form-select @error('plantilla_contable_id') is-invalid @enderror" 
+                                        id="plantilla_contable_id" name="plantilla_contable_id">
+                                    <option value="">Sin plantilla contable</option>
+                                    @php
+                                        $plantillas = \App\Models\PlantillaContable::where('tipo', 'cliente')
+                                                                                    ->where('activo', true)
+                                                                                    ->get();
+                                    @endphp
+                                    @foreach($plantillas as $plantilla)
+                                        <option value="{{ $plantilla->id }}" {{ old('plantilla_contable_id') == $plantilla->id ? 'selected' : '' }}>
+                                            {{ $plantilla->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('plantilla_contable_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-info"></i>
+                                    La plantilla contable permite generar partidas automáticas al facturar a este cliente.
+                                    <a href="{{ route('plantillas-contables.index') }}" target="_blank">Administrar plantillas</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
+                                <select class="form-select @error('estado') is-invalid @enderror" 
+                                        id="estado" name="estado" required>
+                                    <option value="A" {{ old('estado', 'A') == 'A' ? 'selected' : '' }}>Activo</option>
+                                    <option value="I" {{ old('estado') == 'I' ? 'selected' : '' }}>Inactivo</option>
+                                </select>
+                                @error('estado')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -242,19 +293,34 @@
 </div>
 
 <script>
-// Datos geográficos simplificados para el ejemplo
+// Datos geográficos de El Salvador
 const municipiosPorDepartamento = {
-    'San Salvador': ['San Salvador', 'Mejicanos', 'Soyapango', 'Ciudad Delgado', 'Ilopango'],
-    'La Libertad': ['Santa Tecla', 'Antiguo Cuscatlán', 'Nuevo Cuscatlán', 'San Juan Opico', 'Colón'],
-    'Santa Ana': ['Santa Ana', 'Metapán', 'Texistepeque', 'Coatepeque', 'Chalchuapa'],
-    // Agregar más según necesidad
+    'Ahuachapán': ['Ahuachapán', 'Apaneca', 'Atiquizaya', 'Concepción de Ataco', 'El Refugio', 'Guaymango', 'Jujutla', 'San Francisco Menéndez', 'San Lorenzo', 'San Pedro Puxtla', 'Tacuba', 'Turín'],
+    'Cabañas': ['Sensuntepeque', 'Cinquera', 'Dolores', 'Guacotecti', 'Ilobasco', 'Jutiapa', 'San Isidro', 'Tejutepeque', 'Victoria'],
+    'Chalatenango': ['Chalatenango', 'Agua Caliente', 'Arcatao', 'Azacualpa', 'Cancasque', 'Citalá', 'Comalapa', 'Concepción Quezaltepeque', 'Dulce Nombre de María', 'El Carrizal', 'El Paraíso', 'La Laguna', 'La Palma', 'La Reina', 'Las Vueltas', 'Nombre de Jesús', 'Nueva Concepción', 'Nueva Trinidad', 'Ojos de Agua', 'Potonico', 'San Antonio de la Cruz', 'San Antonio Los Ranchos', 'San Fernando', 'San Francisco Lempa', 'San Francisco Morazán', 'San Ignacio', 'San Isidro Labrador', 'San Luis del Carmen', 'San Miguel de Mercedes', 'San Rafael', 'Santa Rita', 'Tejutla'],
+    'Cuscatlán': ['Cojutepeque', 'Candelaria', 'El Carmen', 'El Rosario', 'Monte San Juan', 'Oratorio de Concepción', 'San Bartolomé Perulapía', 'San Cristóbal', 'San José Guayabal', 'San Pedro Perulapán', 'San Rafael Cedros', 'San Ramón', 'Santa Cruz Analquito', 'Santa Cruz Michapa', 'Suchitoto', 'Tenancingo'],
+    'La Libertad': ['Santa Tecla', 'Antiguo Cuscatlán', 'Nuevo Cuscatlán', 'San Juan Opico', 'Colón', 'Jayaque', 'Sacacoyo', 'Tepecoyo', 'Talnique', 'Comasagua', 'Huizúcar', 'Chiltiupán', 'Jicalapa', 'La Libertad', 'Tamanique', 'Teotepeque', 'Quezaltepeque', 'San Matías', 'San Pablo Tacachico', 'San José Villanueva', 'Zaragoza', 'Ciudad Arce'],
+    'La Paz': ['Zacatecoluca', 'Cuyultitán', 'El Rosario', 'Jerusalén', 'Mercedes La Ceiba', 'Olocuilta', 'Paraíso de Osorio', 'San Antonio Masahuat', 'San Emigdio', 'San Francisco Chinameca', 'San Juan Nonualco', 'San Juan Talpa', 'San Juan Tepezontes', 'San Luis La Herradura', 'San Luis Talpa', 'San Miguel Tepezontes', 'San Pedro Masahuat', 'San Pedro Nonualco', 'San Rafael Obrajuelo', 'Santa María Ostuma', 'Santiago Nonualco', 'Tapalhuaca'],
+    'La Unión': ['La Unión', 'Anamorós', 'Bolívar', 'Concepción de Oriente', 'Conchagua', 'El Carmen', 'El Sauce', 'Intipucá', 'Lislique', 'Meanguera del Golfo', 'Nueva Esparta', 'Pasaquina', 'Polorós', 'San Alejo', 'San José', 'Santa Rosa de Lima', 'Yayantique', 'Yucuaiquín'],
+    'Morazán': ['San Francisco Gotera', 'Arambala', 'Cacaopera', 'Chilanga', 'Corinto', 'Delicias de Concepción', 'El Divisadero', 'El Rosario', 'Gualococti', 'Guatajiagua', 'Joateca', 'Jocoaitique', 'Jocoro', 'Lolotiquillo', 'Meanguera', 'Osicala', 'Perquín', 'San Carlos', 'San Fernando', 'San Isidro', 'San Simón', 'Sensembra', 'Sociedad', 'Torola', 'Yamabal', 'Yoloaiquín'],
+    'San Miguel': ['San Miguel', 'Carolina', 'Chapeltique', 'Chinameca', 'Chirilagua', 'Ciudad Barrios', 'Comacarán', 'El Tránsito', 'Lolotique', 'Moncagua', 'Nueva Guadalupe', 'Nuevo Edén de San Juan', 'Quelepa', 'San Antonio', 'San Gerardo', 'San Jorge', 'San Luis de la Reina', 'San Rafael Oriente', 'Sesori', 'Uluazapa'],
+    'San Salvador': ['San Salvador', 'Aguilares', 'Apopa', 'Ayutuxtepeque', 'Ciudad Delgado', 'Cuscatancingo', 'El Paisnal', 'Guazapa', 'Ilopango', 'Mejicanos', 'Nejapa', 'Panchimalco', 'Rosario de Mora', 'San Marcos', 'San Martín', 'Santiago Texacuangos', 'Santo Tomás', 'Soyapango', 'Tonacatepeque'],
+    'San Vicente': ['San Vicente', 'Apastepeque', 'Guadalupe', 'San Cayetano Istepeque', 'San Esteban Catarina', 'San Ildefonso', 'San Lorenzo', 'San Sebastián', 'Santa Clara', 'Santo Domingo', 'Tecoluca', 'Tepetitán', 'Verapaz'],
+    'Santa Ana': ['Santa Ana', 'Candelaria de la Frontera', 'Chalchuapa', 'Coatepeque', 'El Congo', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santa Rosa Guachipilín', 'Santiago de la Frontera', 'Texistepeque'],
+    'Sonsonate': ['Sonsonate', 'Acajutla', 'Armenia', 'Caluco', 'Cuisnahuat', 'Izalco', 'Juayúa', 'Nahuizalco', 'Nahulingo', 'Salcoatitán', 'San Antonio del Monte', 'San Julián', 'Santa Catarina Masahuat', 'Santa Isabel Ishuatán', 'Santo Domingo de Guzmán', 'Sonzacate'],
+    'Usulután': ['Usulután', 'Alegría', 'Berlín', 'California', 'Concepción Batres', 'El Triunfo', 'Ereguayquín', 'Estanzuelas', 'Jiquilisco', 'Jucuapa', 'Jucuarán', 'Mercedes Umaña', 'Nueva Granada', 'Ozatlán', 'Puerto El Triunfo', 'San Agustín', 'San Buenaventura', 'San Dionisio', 'San Francisco Javier', 'Santa Elena', 'Santa María', 'Santiago de María', 'Tecapán']
 };
 
 const distritosPorMunicipio = {
-    'San Salvador': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
-    'Santa Tecla': ['Centro', 'Norte', 'Sur'],
-    'Santa Ana': ['Centro', 'Norte', 'Sur', 'Este'],
-    // Agregar más según necesidad
+    'San Salvador': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro Histórico'],
+    'Santa Tecla': ['Centro', 'Norte', 'Sur', 'Las Colinas', 'Santa Cruz'],
+    'Santa Ana': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
+    'San Miguel': ['Centro', 'Norte', 'Sur', 'Zona Industrial'],
+    'Soyapango': ['Centro', 'Norte', 'Sur', 'Planes de Renderos'],
+    'Mejicanos': ['Centro', 'Norte', 'Zona Industrial'],
+    'Apopa': ['Centro', 'Norte', 'Sur'],
+    'Antiguo Cuscatlán': ['Centro', 'La Mascota', 'Los Bosques'],
+    'Ilopango': ['Centro', 'Zona Industrial', 'Zona Franca']
 };
 
 function cargarMunicipios() {

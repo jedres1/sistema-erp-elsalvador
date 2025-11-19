@@ -297,7 +297,7 @@ class CuentasPorCobrarController extends Controller
         // Aquí se implementaría la lógica para guardar en la base de datos
         // Por ahora simularemos el proceso
 
-        return redirect()->route('cuentas-por-cobrar.proveedores.index')
+        return redirect()->route('proveedores.index')
                         ->with('success', 'Proveedor creado exitosamente');
     }
 
@@ -376,7 +376,7 @@ class CuentasPorCobrarController extends Controller
         // Aquí se implementaría la lógica para actualizar en la base de datos
         // Por ahora simularemos el proceso
 
-        return redirect()->route('cuentas-por-cobrar.proveedores.index')
+        return redirect()->route('proveedores.index')
                         ->with('success', 'Proveedor actualizado exitosamente');
     }
 
@@ -388,7 +388,7 @@ class CuentasPorCobrarController extends Controller
         // Aquí se implementaría la lógica para eliminar de la base de datos
         // Por ahora simularemos el proceso
 
-        return redirect()->route('cuentas-por-cobrar.proveedores.index')
+        return redirect()->route('proveedores.index')
                         ->with('success', 'Proveedor eliminado exitosamente');
     }
 

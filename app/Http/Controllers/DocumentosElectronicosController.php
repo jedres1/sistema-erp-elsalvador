@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\PartidaContableService;
 
 class DocumentosElectronicosController extends Controller
 {
+    protected $partidaService;
+
+    public function __construct(PartidaContableService $partidaService)
+    {
+        $this->partidaService = $partidaService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -180,9 +187,29 @@ class DocumentosElectronicosController extends Controller
      */
     public function store(Request $request)
     {
-        // Aquí se implementaría la lógica para crear y timbrar el documento
-        return redirect()->route('documentos-electronicos.index')
-                        ->with('success', 'Documento electrónico creado exitosamente.');
+        try {
+            // Validar datos de la factura
+            $validated = $request->validate([
+                'cliente_id' => 'required|exists:clientes,id',
+                'fecha' => 'required|date',
+                'descripcion' => 'required|string',
+                'items' => 'required|array|min:1',
+                'items.*.producto_id' => 'required|exists:productos,id',
+                'items.*.cantidad' => 'required|numeric|min:0.01',
+                'items.*.precio_unitario' => 'required|numeric|min:0'
+            ]);
+
+            // Generar la partida contable automáticamente
+            $partida = $this->partidaService->generarPartidaDesdeFactura($validated);
+
+            return redirect()->route('documentos-electronicos.index')
+                ->with('success', "Documento electrónico creado exitosamente. Partida contable #{$partida->id} generada (sin mayorizar).");
+                
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Error al crear el documento: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -300,66 +327,8 @@ class DocumentosElectronicosController extends Controller
      */
     public function clientesIndex()
     {
-        // Datos simulados de clientes
-        $clientes = [
-            [
-                'id' => 1,
-                'tipo_documento' => 'NIT',
-                'numero_documento' => '1234567890123',
-                'dui' => '12345678-9',
-                'razon_social' => 'Empresa ABC S.A. de C.V.',
-                'nombre_comercial' => 'ABC Comercial',
-                'telefono' => '2234-5678',
-                'email' => 'facturacion@empresaabc.com',
-                'direccion' => 'Col. San Benito, Av. La Revolución, San Salvador',
-                'departamento' => 'San Salvador',
-                'municipio' => 'San Salvador',
-                'distrito' => 'Centro',
-                'giro_comercial' => 'Venta de productos farmacéuticos',
-                'estado' => 'Activo',
-                'fecha_registro' => '2024-01-15',
-                'credito_limite' => 50000.00,
-                'credito_utilizado' => 12500.00
-            ],
-            [
-                'id' => 2,
-                'tipo_documento' => 'NIT',
-                'numero_documento' => '9876543210987',
-                'dui' => '98765432-1',
-                'razon_social' => 'Comercial XYZ Ltda.',
-                'nombre_comercial' => 'XYZ Store',
-                'telefono' => '2345-6789',
-                'email' => 'ventas@comercialxyz.com',
-                'direccion' => 'Col. Escalón, 89 Av. Norte, San Salvador',
-                'departamento' => 'San Salvador',
-                'municipio' => 'San Salvador',
-                'distrito' => 'Escalón',
-                'giro_comercial' => 'Comercio al por menor',
-                'estado' => 'Activo',
-                'fecha_registro' => '2024-02-20',
-                'credito_limite' => 30000.00,
-                'credito_utilizado' => 8750.00
-            ],
-            [
-                'id' => 3,
-                'tipo_documento' => 'DUI',
-                'numero_documento' => '11223344-5',
-                'dui' => '11223344-5',
-                'razon_social' => 'José Manuel Pérez',
-                'nombre_comercial' => 'Servicios JMP',
-                'telefono' => '7890-1234',
-                'email' => 'jm.perez@gmail.com',
-                'direccion' => 'Col. Miramonte, Calle Los Cedros #25, Santa Tecla',
-                'departamento' => 'La Libertad',
-                'municipio' => 'Santa Tecla',
-                'distrito' => 'Centro',
-                'giro_comercial' => 'Servicios profesionales de consultoría',
-                'estado' => 'Activo',
-                'fecha_registro' => '2024-03-10',
-                'credito_limite' => 15000.00,
-                'credito_utilizado' => 0.00
-            ]
-        ];
+        // Obtener clientes de la base de datos
+        $clientes = \App\Models\Cliente::orderBy('nombre', 'asc')->get();
 
         return view('documentos-electronicos.clientes.index', compact('clientes'));
     }
@@ -377,23 +346,32 @@ class DocumentosElectronicosController extends Controller
      */
     public function clientesStore(Request $request)
     {
-        // Validación básica
-        $request->validate([
-            'tipo_documento' => 'required|in:NIT,DUI',
-            'numero_documento' => 'required|string|max:20',
-            'razon_social' => 'required|string|max:255',
+        // Validación
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:200',
+            'nombre_comercial' => 'nullable|string|max:200',
+            'tipo_documento' => 'required|in:NIT,DUI,PASAPORTE,NRC',
+            'numero_documento' => 'required|string|max:50|unique:clientes,numero_documento',
+            'nrc' => 'nullable|string|max:20',
+            'giro' => 'nullable|string|max:100',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'direccion' => 'required|string|max:500',
-            'departamento' => 'required|string|max:100',
-            'municipio' => 'required|string|max:100',
-            'giro_comercial' => 'required|string|max:255'
+            'email' => 'nullable|email|max:100',
+            'direccion' => 'nullable|string',
+            'contacto' => 'nullable|string|max:100',
+            'limite_credito' => 'nullable|numeric|min:0',
+            'dias_credito' => 'nullable|integer|min:0',
+            'plantilla_contable_id' => 'nullable|exists:plantillas_contables,id',
+            'estado' => 'required|in:A,I'
         ]);
 
-        // Aquí normalmente guardarías en la base de datos
-        // Cliente::create($request->all());
+        // Generar código automático
+        $ultimoCliente = \App\Models\Cliente::orderBy('id', 'desc')->first();
+        $validated['codigo'] = 'CLI-' . str_pad(($ultimoCliente ? $ultimoCliente->id + 1 : 1), 6, '0', STR_PAD_LEFT);
 
-        return redirect()->route('documentos-electronicos.clientes.index')
+        // Crear el cliente
+        $cliente = \App\Models\Cliente::create($validated);
+
+        return redirect()->route('clientes.index')
                         ->with('success', 'Cliente registrado exitosamente');
     }
 
@@ -447,23 +425,7 @@ class DocumentosElectronicosController extends Controller
      */
     public function clientesEdit($id)
     {
-        // Datos simulados del cliente
-        $cliente = [
-            'id' => $id,
-            'tipo_documento' => 'NIT',
-            'numero_documento' => '1234567890123',
-            'dui' => '12345678-9',
-            'razon_social' => 'Empresa ABC S.A. de C.V.',
-            'nombre_comercial' => 'ABC Comercial',
-            'telefono' => '2234-5678',
-            'email' => 'facturacion@empresaabc.com',
-            'direccion' => 'Col. San Benito, Av. La Revolución, San Salvador',
-            'departamento' => 'San Salvador',
-            'municipio' => 'San Salvador',
-            'distrito' => 'Centro',
-            'giro_comercial' => 'Venta de productos farmacéuticos',
-            'credito_limite' => 50000.00
-        ];
+        $cliente = \App\Models\Cliente::findOrFail($id);
 
         return view('documentos-electronicos.clientes.edit', compact('cliente'));
     }
@@ -473,24 +435,29 @@ class DocumentosElectronicosController extends Controller
      */
     public function clientesUpdate(Request $request, $id)
     {
-        // Validación básica
-        $request->validate([
-            'tipo_documento' => 'required|in:NIT,DUI',
-            'numero_documento' => 'required|string|max:20',
-            'razon_social' => 'required|string|max:255',
+        $cliente = \App\Models\Cliente::findOrFail($id);
+
+        // Validación
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:200',
+            'nombre_comercial' => 'nullable|string|max:200',
+            'tipo_documento' => 'required|in:NIT,DUI,PASAPORTE,NRC',
+            'numero_documento' => 'required|string|max:50|unique:clientes,numero_documento,' . $id,
+            'nrc' => 'nullable|string|max:20',
+            'giro' => 'nullable|string|max:100',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'direccion' => 'required|string|max:500',
-            'departamento' => 'required|string|max:100',
-            'municipio' => 'required|string|max:100',
-            'giro_comercial' => 'required|string|max:255'
+            'email' => 'nullable|email|max:100',
+            'direccion' => 'nullable|string',
+            'contacto' => 'nullable|string|max:100',
+            'limite_credito' => 'nullable|numeric|min:0',
+            'dias_credito' => 'nullable|integer|min:0',
+            'plantilla_contable_id' => 'nullable|exists:plantillas_contables,id',
+            'estado' => 'required|in:A,I'
         ]);
 
-        // Aquí normalmente actualizarías en la base de datos
-        // $cliente = Cliente::findOrFail($id);
-        // $cliente->update($request->all());
+        $cliente->update($validated);
 
-        return redirect()->route('documentos-electronicos.clientes.index')
+        return redirect()->route('clientes.index')
                         ->with('success', 'Cliente actualizado exitosamente');
     }
 
@@ -499,11 +466,10 @@ class DocumentosElectronicosController extends Controller
      */
     public function clientesDestroy($id)
     {
-        // Aquí normalmente eliminarías de la base de datos
-        // $cliente = Cliente::findOrFail($id);
-        // $cliente->delete();
+        $cliente = \App\Models\Cliente::findOrFail($id);
+        $cliente->delete();
 
-        return redirect()->route('documentos-electronicos.clientes.index')
+        return redirect()->route('clientes.index')
                         ->with('success', 'Cliente eliminado exitosamente');
     }
 
