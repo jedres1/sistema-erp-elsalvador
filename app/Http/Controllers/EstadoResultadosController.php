@@ -11,17 +11,16 @@ class EstadoResultadosController extends Controller
 {
     public function index()
     {
-        // Obtener todas las cuentas del catálogo que son de cuentas 4 y 5 (gastos e ingresos)
-        // con patrón de 2 dígitos + 10 ceros
+        // Obtener todas las cuentas del catálogo
         $accounts = AccountCatalog::all();
         
-        // Filtrar cuentas para Estado de Resultados (cuentas 4 y 5 con 2 dígitos + 10 ceros)
+        // Filtrar cuentas para Estado de Resultados (cuentas con tipo 'ingreso' y 'gasto' con 2 dígitos + 10 ceros)
         $resultAccounts = $accounts->filter(function($account) {
             $cleanCode = str_replace('.', '', $account->code);
             // Buscar patrón: 2 dígitos seguidos de 10 ceros
             if (preg_match('/^[0-9]{2}0000000000$/', $cleanCode)) {
-                $firstDigit = substr($cleanCode, 0, 1);
-                return in_array($firstDigit, ['4', '5']);
+                // Usar el nuevo campo type_account
+                return in_array($account->type_account, ['ingreso', 'gasto']);
             }
             return false;
         });
@@ -34,10 +33,9 @@ class EstadoResultadosController extends Controller
         
         foreach ($resultAccounts as $account) {
             $cleanCode = str_replace('.', '', $account->code);
-            $firstDigit = substr($cleanCode, 0, 1);
             
             // Calcular saldo acumulado para esta cuenta de agrupación
-            $saldoAcumulado = $this->calcularSaldoAcumulado($cleanCode);
+            $saldoAcumulado = $this->calcularSaldoAcumulado($cleanCode, $account->type_account);
             
             $accountData = [
                 'code' => $account->code,
@@ -45,12 +43,12 @@ class EstadoResultadosController extends Controller
                 'balance' => $saldoAcumulado
             ];
             
-            if ($firstDigit === '4') {
-                $gastos[] = $accountData;
-                $totalGastos += $saldoAcumulado;
-            } elseif ($firstDigit === '5') {
+            if ($account->type_account === 'ingreso') {
                 $ingresos[] = $accountData;
                 $totalIngresos += $saldoAcumulado;
+            } elseif ($account->type_account === 'gasto') {
+                $gastos[] = $accountData;
+                $totalGastos += $saldoAcumulado;
             }
         }
         
@@ -66,7 +64,7 @@ class EstadoResultadosController extends Controller
         ));
     }
     
-    private function calcularSaldoAcumulado($cleanCodeAgrupacion)
+    private function calcularSaldoAcumulado($cleanCodeAgrupacion, $typeAccount)
     {
         // Para Estado de Resultados, usar solo los primeros 2 dígitos
         $prefijoAgrupacion = substr($cleanCodeAgrupacion, 0, 2);
@@ -82,14 +80,14 @@ class EstadoResultadosController extends Controller
         
         foreach ($subcuentas as $subcuenta) {
             // Calcular saldo para esta subcuenta
-            $saldo = $this->calcularSaldoCuenta($subcuenta->code);
+            $saldo = $this->calcularSaldoCuenta($subcuenta->code, $typeAccount);
             $saldoTotal += $saldo;
         }
         
         return $saldoTotal;
     }
     
-    private function calcularSaldoCuenta($accountCode)
+    private function calcularSaldoCuenta($accountCode, $typeAccount)
     {
         // Obtener el ID de la cuenta
         $account = AccountCatalog::where('code', $accountCode)->first();
@@ -108,17 +106,14 @@ class EstadoResultadosController extends Controller
         $totalDebito = $movimientos->sum('debit_amount');
         $totalCredito = $movimientos->sum('credit_amount');
         
-        // Para cuentas de gastos (4): saldo = débitos - créditos
-        // Para cuentas de ingresos (5): saldo = créditos - débitos
-        $cleanCode = str_replace('.', '', $accountCode);
-        $firstDigit = substr($cleanCode, 0, 1);
-        
-        if ($firstDigit === '4') {
-            // Gastos: débitos aumentan el saldo
-            return $totalDebito - $totalCredito;
-        } elseif ($firstDigit === '5') {
+        // Para cuentas de ingresos: saldo = créditos - débitos
+        // Para cuentas de gastos: saldo = débitos - créditos
+        if ($typeAccount === 'ingreso' || $account->type_account === 'ingreso') {
             // Ingresos: créditos aumentan el saldo
             return $totalCredito - $totalDebito;
+        } elseif ($typeAccount === 'gasto' || $account->type_account === 'gasto') {
+            // Gastos: débitos aumentan el saldo
+            return $totalDebito - $totalCredito;
         }
         
         return 0;

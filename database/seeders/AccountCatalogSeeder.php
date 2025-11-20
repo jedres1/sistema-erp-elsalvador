@@ -558,7 +558,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.0.00.00.00.00.00',
                 'description' => 'INGRESOS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'B',
                 'accept_transaction' => 'N'
@@ -568,7 +568,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.1.00.00.00.00.00',
                 'description' => 'INGRESOS OPERACIONALES', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'B',
                 'accept_transaction' => 'N'
@@ -576,7 +576,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.1.01.00.00.00.00',
                 'description' => 'VENTAS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -584,7 +584,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.1.02.00.00.00.00',
                 'description' => 'INGRESOS POR SERVICIOS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -592,7 +592,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.1.03.00.00.00.00',
                 'description' => 'DESCUENTOS Y REBAJAS EN VENTAS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'D', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -600,7 +600,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.1.04.00.00.00.00',
                 'description' => 'DEVOLUCIONES EN VENTAS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'D', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -610,7 +610,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.2.00.00.00.00.00',
                 'description' => 'INGRESOS NO OPERACIONALES', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'B',
                 'accept_transaction' => 'N'
@@ -618,7 +618,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.2.01.00.00.00.00',
                 'description' => 'INGRESOS FINANCIEROS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -626,7 +626,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '4.2.02.00.00.00.00',
                 'description' => 'OTROS INGRESOS', 
-                'type_account' => 'R', 
+                'type_account' => 'ingreso', 
                 'type_naturaled' => 'A', 
                 'group' => 'R',
                 'accept_transaction' => 'S'
@@ -636,7 +636,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.0.00.00.00.00.00',
                 'description' => 'COSTOS DE VENTAS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'D', 
                 'group' => 'B',
                 'accept_transaction' => 'N'
@@ -644,7 +644,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.1.00.00.00.00.00',
                 'description' => 'COSTO DE MERCADERÍA VENDIDA', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'D', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
@@ -652,7 +652,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.2.00.00.00.00.00',
                 'description' => 'COSTO DE SERVICIOS PRESTADOS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'D', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
@@ -660,7 +660,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.3.00.00.00.00.00',
                 'description' => 'COMPRAS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'D', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
@@ -668,7 +668,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.4.00.00.00.00.00',
                 'description' => 'FLETES EN COMPRAS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'D', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
@@ -676,7 +676,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.5.00.00.00.00.00',
                 'description' => 'DESCUENTOS Y REBAJAS EN COMPRAS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'A', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
@@ -684,7 +684,7 @@ class AccountCatalogSeeder extends Seeder
             [
                 'code' => '5.6.00.00.00.00.00',
                 'description' => 'DEVOLUCIONES EN COMPRAS', 
-                'type_account' => 'C', 
+                'type_account' => 'gasto', 
                 'type_naturaled' => 'A', 
                 'group' => 'C',
                 'accept_transaction' => 'S'
