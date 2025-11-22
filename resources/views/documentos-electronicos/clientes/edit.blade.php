@@ -149,22 +149,22 @@
                             <div class="col-md-4">
                                 <label for="departamento" class="form-label">Departamento <span class="text-danger">*</span></label>
                                 <select class="form-select @error('departamento') is-invalid @enderror" 
-                                        id="departamento" name="departamento" required onchange="cargarMunicipios()">
+                                        id="departamento" name="departamento" required>
                                     <option value="">Seleccionar departamento...</option>
-                                    <option value="Ahuachapán" {{ old('departamento', $cliente->departamento) == 'Ahuachapán' ? 'selected' : '' }}>Ahuachapán</option>
-                                    <option value="Cabañas" {{ old('departamento', $cliente->departamento) == 'Cabañas' ? 'selected' : '' }}>Cabañas</option>
-                                    <option value="Chalatenango" {{ old('departamento', $cliente->departamento) == 'Chalatenango' ? 'selected' : '' }}>Chalatenango</option>
-                                    <option value="Cuscatlán" {{ old('departamento', $cliente->departamento) == 'Cuscatlán' ? 'selected' : '' }}>Cuscatlán</option>
-                                    <option value="La Libertad" {{ old('departamento', $cliente->departamento) == 'La Libertad' ? 'selected' : '' }}>La Libertad</option>
-                                    <option value="La Paz" {{ old('departamento', $cliente->departamento) == 'La Paz' ? 'selected' : '' }}>La Paz</option>
-                                    <option value="La Unión" {{ old('departamento', $cliente->departamento) == 'La Unión' ? 'selected' : '' }}>La Unión</option>
-                                    <option value="Morazán" {{ old('departamento', $cliente->departamento) == 'Morazán' ? 'selected' : '' }}>Morazán</option>
-                                    <option value="San Miguel" {{ old('departamento', $cliente->departamento) == 'San Miguel' ? 'selected' : '' }}>San Miguel</option>
-                                    <option value="San Salvador" {{ old('departamento', $cliente->departamento) == 'San Salvador' ? 'selected' : '' }}>San Salvador</option>
-                                    <option value="San Vicente" {{ old('departamento', $cliente->departamento) == 'San Vicente' ? 'selected' : '' }}>San Vicente</option>
-                                    <option value="Santa Ana" {{ old('departamento', $cliente->departamento) == 'Santa Ana' ? 'selected' : '' }}>Santa Ana</option>
-                                    <option value="Sonsonate" {{ old('departamento', $cliente->departamento) == 'Sonsonate' ? 'selected' : '' }}>Sonsonate</option>
-                                    <option value="Usulután" {{ old('departamento', $cliente->departamento) == 'Usulután' ? 'selected' : '' }}>Usulután</option>
+                                    <option value="01" {{ old('departamento', $cliente->departamento) == '01' ? 'selected' : '' }}>01 - Ahuachapán</option>
+                                    <option value="02" {{ old('departamento', $cliente->departamento) == '02' ? 'selected' : '' }}>02 - Santa Ana</option>
+                                    <option value="03" {{ old('departamento', $cliente->departamento) == '03' ? 'selected' : '' }}>03 - Sonsonate</option>
+                                    <option value="04" {{ old('departamento', $cliente->departamento) == '04' ? 'selected' : '' }}>04 - Chalatenango</option>
+                                    <option value="05" {{ old('departamento', $cliente->departamento) == '05' ? 'selected' : '' }}>05 - La Libertad</option>
+                                    <option value="06" {{ old('departamento', $cliente->departamento) == '06' ? 'selected' : '' }}>06 - San Salvador</option>
+                                    <option value="07" {{ old('departamento', $cliente->departamento) == '07' ? 'selected' : '' }}>07 - Cuscatlán</option>
+                                    <option value="08" {{ old('departamento', $cliente->departamento) == '08' ? 'selected' : '' }}>08 - La Paz</option>
+                                    <option value="09" {{ old('departamento', $cliente->departamento) == '09' ? 'selected' : '' }}>09 - Cabañas</option>
+                                    <option value="10" {{ old('departamento', $cliente->departamento) == '10' ? 'selected' : '' }}>10 - San Vicente</option>
+                                    <option value="11" {{ old('departamento', $cliente->departamento) == '11' ? 'selected' : '' }}>11 - Usulután</option>
+                                    <option value="12" {{ old('departamento', $cliente->departamento) == '12' ? 'selected' : '' }}>12 - San Miguel</option>
+                                    <option value="13" {{ old('departamento', $cliente->departamento) == '13' ? 'selected' : '' }}>13 - Morazán</option>
+                                    <option value="14" {{ old('departamento', $cliente->departamento) == '14' ? 'selected' : '' }}>14 - La Unión</option>
                                 </select>
                                 @error('departamento')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -173,7 +173,7 @@
                             <div class="col-md-4">
                                 <label for="municipio" class="form-label">Municipio <span class="text-danger">*</span></label>
                                 <select class="form-select @error('municipio') is-invalid @enderror" 
-                                        id="municipio" name="municipio" required onchange="cargarDistritos()">
+                                        id="municipio" name="municipio" required>
                                     <option value="">Seleccionar municipio...</option>
                                 </select>
                                 @error('municipio')
@@ -279,120 +279,46 @@
     </div>
 </div>
 
+<script src="{{ asset('js/geografia.js') }}"></script>
 <script>
-// Datos geográficos de El Salvador
-const municipiosPorDepartamento = {
-    'Ahuachapán': ['Ahuachapán', 'Apaneca', 'Atiquizaya', 'Concepción de Ataco', 'El Refugio', 'Guaymango', 'Jujutla', 'San Francisco Menéndez', 'San Lorenzo', 'San Pedro Puxtla', 'Tacuba', 'Turín'],
-    'Cabañas': ['Sensuntepeque', 'Cinquera', 'Dolores', 'Guacotecti', 'Ilobasco', 'Jutiapa', 'San Isidro', 'Tejutepeque', 'Victoria'],
-    'Chalatenango': ['Chalatenango', 'Agua Caliente', 'Arcatao', 'Azacualpa', 'Cancasque', 'Citalá', 'Comalapa', 'Concepción Quezaltepeque', 'Dulce Nombre de María', 'El Carrizal', 'El Paraíso', 'La Laguna', 'La Palma', 'La Reina', 'Las Vueltas', 'Nombre de Jesús', 'Nueva Concepción', 'Nueva Trinidad', 'Ojos de Agua', 'Potonico', 'San Antonio de la Cruz', 'San Antonio Los Ranchos', 'San Fernando', 'San Francisco Lempa', 'San Francisco Morazán', 'San Ignacio', 'San Isidro Labrador', 'San Luis del Carmen', 'San Miguel de Mercedes', 'San Rafael', 'Santa Rita', 'Tejutla'],
-    'Cuscatlán': ['Cojutepeque', 'Candelaria', 'El Carmen', 'El Rosario', 'Monte San Juan', 'Oratorio de Concepción', 'San Bartolomé Perulapía', 'San Cristóbal', 'San José Guayabal', 'San Pedro Perulapán', 'San Rafael Cedros', 'San Ramón', 'Santa Cruz Analquito', 'Santa Cruz Michapa', 'Suchitoto', 'Tenancingo'],
-    'La Libertad': ['Santa Tecla', 'Antiguo Cuscatlán', 'Nuevo Cuscatlán', 'San Juan Opico', 'Colón', 'Jayaque', 'Sacacoyo', 'Tepecoyo', 'Talnique', 'Comasagua', 'Huizúcar', 'Chiltiupán', 'Jicalapa', 'La Libertad', 'Tamanique', 'Teotepeque', 'Quezaltepeque', 'San Matías', 'San Pablo Tacachico', 'San José Villanueva', 'Zaragoza', 'Ciudad Arce'],
-    'La Paz': ['Zacatecoluca', 'Cuyultitán', 'El Rosario', 'Jerusalén', 'Mercedes La Ceiba', 'Olocuilta', 'Paraíso de Osorio', 'San Antonio Masahuat', 'San Emigdio', 'San Francisco Chinameca', 'San Juan Nonualco', 'San Juan Talpa', 'San Juan Tepezontes', 'San Luis La Herradura', 'San Luis Talpa', 'San Miguel Tepezontes', 'San Pedro Masahuat', 'San Pedro Nonualco', 'San Rafael Obrajuelo', 'Santa María Ostuma', 'Santiago Nonualco', 'Tapalhuaca'],
-    'La Unión': ['La Unión', 'Anamorós', 'Bolívar', 'Concepción de Oriente', 'Conchagua', 'El Carmen', 'El Sauce', 'Intipucá', 'Lislique', 'Meanguera del Golfo', 'Nueva Esparta', 'Pasaquina', 'Polorós', 'San Alejo', 'San José', 'Santa Rosa de Lima', 'Yayantique', 'Yucuaiquín'],
-    'Morazán': ['San Francisco Gotera', 'Arambala', 'Cacaopera', 'Chilanga', 'Corinto', 'Delicias de Concepción', 'El Divisadero', 'El Rosario', 'Gualococti', 'Guatajiagua', 'Joateca', 'Jocoaitique', 'Jocoro', 'Lolotiquillo', 'Meanguera', 'Osicala', 'Perquín', 'San Carlos', 'San Fernando', 'San Isidro', 'San Simón', 'Sensembra', 'Sociedad', 'Torola', 'Yamabal', 'Yoloaiquín'],
-    'San Miguel': ['San Miguel', 'Carolina', 'Chapeltique', 'Chinameca', 'Chirilagua', 'Ciudad Barrios', 'Comacarán', 'El Tránsito', 'Lolotique', 'Moncagua', 'Nueva Guadalupe', 'Nuevo Edén de San Juan', 'Quelepa', 'San Antonio', 'San Gerardo', 'San Jorge', 'San Luis de la Reina', 'San Rafael Oriente', 'Sesori', 'Uluazapa'],
-    'San Salvador': ['San Salvador', 'Aguilares', 'Apopa', 'Ayutuxtepeque', 'Ciudad Delgado', 'Cuscatancingo', 'El Paisnal', 'Guazapa', 'Ilopango', 'Mejicanos', 'Nejapa', 'Panchimalco', 'Rosario de Mora', 'San Marcos', 'San Martín', 'Santiago Texacuangos', 'Santo Tomás', 'Soyapango', 'Tonacatepeque'],
-    'San Vicente': ['San Vicente', 'Apastepeque', 'Guadalupe', 'San Cayetano Istepeque', 'San Esteban Catarina', 'San Ildefonso', 'San Lorenzo', 'San Sebastián', 'Santa Clara', 'Santo Domingo', 'Tecoluca', 'Tepetitán', 'Verapaz'],
-    'Santa Ana': ['Santa Ana', 'Candelaria de la Frontera', 'Chalchuapa', 'Coatepeque', 'El Congo', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santa Rosa Guachipilín', 'Santiago de la Frontera', 'Texistepeque'],
-    'Sonsonate': ['Sonsonate', 'Acajutla', 'Armenia', 'Caluco', 'Cuisnahuat', 'Izalco', 'Juayúa', 'Nahuizalco', 'Nahulingo', 'Salcoatitán', 'San Antonio del Monte', 'San Julián', 'Santa Catarina Masahuat', 'Santa Isabel Ishuatán', 'Santo Domingo de Guzmán', 'Sonzacate'],
-    'Usulután': ['Usulután', 'Alegría', 'Berlín', 'California', 'Concepción Batres', 'El Triunfo', 'Ereguayquín', 'Estanzuelas', 'Jiquilisco', 'Jucuapa', 'Jucuarán', 'Mercedes Umaña', 'Nueva Granada', 'Ozatlán', 'Puerto El Triunfo', 'San Agustín', 'San Buenaventura', 'San Dionisio', 'San Francisco Javier', 'Santa Elena', 'Santa María', 'Santiago de María', 'Tecapán']
-};
-
-const distritosPorMunicipio = {
-    'San Salvador': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro Histórico'],
-    'Santa Tecla': ['Centro', 'Norte', 'Sur', 'Las Colinas', 'Santa Cruz'],
-    'Santa Ana': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
-    'San Miguel': ['Centro', 'Norte', 'Sur', 'Zona Industrial'],
-    'Soyapango': ['Centro', 'Norte', 'Sur', 'Planes de Renderos'],
-    'Mejicanos': ['Centro', 'Norte', 'Zona Industrial'],
-    'Apopa': ['Centro', 'Norte', 'Sur'],
-    'Antiguo Cuscatlán': ['Centro', 'La Mascota', 'Los Bosques'],
-    'Ilopango': ['Centro', 'Zona Industrial', 'Zona Franca']
-};
-
-// Valores actuales del cliente
-const departamentoActual = '{{ old("departamento", $cliente["departamento"]) }}';
-const municipioActual = '{{ old("municipio", $cliente["municipio"] ?? "") }}';
-const distritoActual = '{{ old("distrito", $cliente["distrito"] ?? "") }}';
-
-function cargarMunicipios() {
-    const departamento = document.getElementById('departamento').value;
-    const municipioSelect = document.getElementById('municipio');
-    const distritoSelect = document.getElementById('distrito');
-    
-    // Limpiar municipios y distritos
-    municipioSelect.innerHTML = '<option value="">Seleccionar municipio...</option>';
-    distritoSelect.innerHTML = '<option value="">Seleccionar distrito...</option>';
-    
-    if (departamento && municipiosPorDepartamento[departamento]) {
-        municipiosPorDepartamento[departamento].forEach(municipio => {
-            const option = document.createElement('option');
-            option.value = municipio;
-            option.textContent = municipio;
-            if (municipio === municipioActual) {
-                option.selected = true;
-            }
-            municipioSelect.appendChild(option);
-        });
-        
-        // Si hay municipio seleccionado, cargar sus distritos
-        if (municipioActual && municipiosPorDepartamento[departamento].includes(municipioActual)) {
-            cargarDistritos();
-        }
-    }
-}
-
-function cargarDistritos() {
-    const municipio = document.getElementById('municipio').value;
-    const distritoSelect = document.getElementById('distrito');
-    
-    // Limpiar distritos
-    distritoSelect.innerHTML = '<option value="">Seleccionar distrito...</option>';
-    
-    if (municipio && distritosPorMunicipio[municipio]) {
-        distritosPorMunicipio[municipio].forEach(distrito => {
-            const option = document.createElement('option');
-            option.value = distrito;
-            option.textContent = distrito;
-            if (distrito === distritoActual) {
-                option.selected = true;
-            }
-            distritoSelect.appendChild(option);
-        });
-    }
-}
-
-// Cargar municipios al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
-    if (departamentoActual) {
-        cargarMunicipios();
-    }
-});
+    // Inicializar sistema geográfico centralizado
+    Geografia.inicializar({
+        departamentoId: 'departamento',
+        municipioId: 'municipio',
+        distritoId: 'distrito',
+        valoresActuales: {
+            departamento: '{{ $cliente->departamento }}',
+            municipio: '{{ $cliente->municipio }}',
+            distrito: '{{ $cliente->distrito }}'
+        }
+    });
 
-// Formatear DUI mientras se escribe
-document.getElementById('dui').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length >= 8) {
-        value = value.substring(0, 8) + '-' + value.substring(8, 9);
-    }
-    e.target.value = value;
-});
+    // Formatear DUI mientras se escribe
+    document.getElementById('dui').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 8) {
+            value = value.substring(0, 8) + '-' + value.substring(8, 9);
+        }
+        e.target.value = value;
+    });
 
-// Validación de tipo de documento
-document.getElementById('tipo_documento').addEventListener('change', function() {
-    const tipo = this.value;
-    const numeroDoc = document.getElementById('numero_documento');
-    const dui = document.getElementById('dui');
-    
-    if (tipo === 'DUI') {
-        numeroDoc.placeholder = '12345678-9';
-        numeroDoc.maxLength = 10;
-        dui.required = false;
-    } else if (tipo === 'NIT') {
-        numeroDoc.placeholder = '1234567890123';
-        numeroDoc.maxLength = 17;
-        dui.required = false;
-    }
+    // Validación de tipo de documento
+    document.getElementById('tipo_documento').addEventListener('change', function() {
+        const tipo = this.value;
+        const numeroDoc = document.getElementById('numero_documento');
+        const dui = document.getElementById('dui');
+        
+        if (tipo === 'DUI') {
+            numeroDoc.placeholder = '12345678-9';
+            numeroDoc.maxLength = 10;
+            dui.required = false;
+        } else if (tipo === 'NIT') {
+            numeroDoc.placeholder = '1234567890123';
+            numeroDoc.maxLength = 17;
+            dui.required = false;
+        }
+    });
 });
 </script>
 @endsection

@@ -256,66 +256,15 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/geografia.js') }}"></script>
 <script>
 $(document).ready(function() {
-    // Datos geográficos de El Salvador
-    const geografiaElSalvador = {
-        'San Salvador': {
-            'Zona Metropolitana de San Salvador': ['San Salvador', 'Mejicanos', 'Soyapango', 'Delgado', 'Ilopango', 'San Marcos', 'Tonacatepeque', 'Ayutuxtepeque', 'Apopa', 'Nejapa', 'Cuscatancingo', 'San Martín'],
-            'Zona Norte de San Salvador': ['Aguilares', 'El Paisnal', 'Guazapa'],
-            'Zona Sur de San Salvador': ['Panchimalco', 'Rosario de Mora', 'San Antonio Abad', 'Candelaria', 'San Marcos', 'Escalón', 'Flor Blanca']
-        },
-        'La Libertad': {
-            'Zona Costera': ['La Libertad', 'Puerto de La Libertad', 'Tamanique', 'Teotepeque', 'Tepecoyo', 'Talnique'],
-            'Zona Central': ['Santa Tecla', 'Antiguo Cuscatlán', 'Huizúcar', 'Nuevo Cuscatlán'],
-            'Zona Norte': ['Quezaltepeque', 'San Pablo Tacachico', 'Jayaque', 'Sacacoyo', 'San José Villanueva']
-        },
-        'Santa Ana': {
-            'Zona Central de Santa Ana': ['Santa Ana', 'Coatepeque', 'El Congo'],
-            'Zona Norte': ['Chalchuapa', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santiago de la Frontera', 'Texistepeque'],
-            'Zona Sur': ['Candelaria de la Frontera', 'Santa Rosa Guachipilín', 'Casitas']
-        },
-        'San Miguel': {
-            'Zona Central': ['San Miguel', 'Carolina', 'Ciudad Barrios', 'Comacarán', 'Chapeltique', 'Nueva Guadalupe'],
-            'Zona Norte': ['Sesori', 'San Gerardo', 'Lolotique', 'Moncagua', 'Quelepa'],
-            'Zona Este': ['Chirilagua', 'San Jorge', 'Uluazapa']
-        },
-        'Usulután': {
-            'Zona Central': ['Usulután', 'Jucuapa', 'Concepción Batres', 'Santa Elena', 'Ereguayquín'],
-            'Zona Costera': ['Jiquilisco', 'Puerto El Triunfo', 'San Dionisio'],
-            'Zona Norte': ['Alegría', 'Berlín', 'Mercedes Umaña', 'Nueva Granada', 'Santiago de María', 'California', 'Tecapán', 'El Triunfo']
-        },
-        'Sonsonate': {
-            'Zona Central': ['Sonsonate', 'Armenia', 'Caluco', 'Izalco', 'Juayúa', 'Nahuizalco', 'Nahulingo', 'Salcoatitán', 'San Antonio del Monte', 'Santa Catarina Masahuat', 'Santa Isabel Ishuatán', 'Santo Domingo de Guzmán', 'Sonzacate'],
-            'Zona Costera': ['Acajutla', 'San Julián', 'Cuisnahuat'],
-            'Zona Norte': ['Santa Ana Tecla']
-        },
-        'La Paz': {
-            'Zona Central': ['Zacatecoluca', 'San Luis Talpa', 'San Pedro Masahuat', 'Tapalhuaca', 'San Emigdio', 'San Francisco Chinameca', 'Santiago Nonualco', 'Santa María Ostuma'],
-            'Zona Norte': ['Cuyultitán', 'El Rosario', 'Jerusalén', 'Mercedes La Ceiba', 'Olocuilta', 'Paraíso de Osorio', 'San Antonio Masahuat', 'San Juan Nonualco', 'San Juan Talpa', 'San Luis La Herradura', 'San Miguel Tepezontes', 'San Pedro Nonualco', 'San Rafael Obrajuelo']
-        },
-        'Chalatenango': {
-            'Zona Central': ['Chalatenango', 'Agua Caliente', 'Arcatao', 'Azacualpa', 'Comalapa', 'Concepción Quezaltepeque', 'Dulce Nombre de María', 'El Carrizal', 'El Paraíso', 'La Laguna', 'La Palma', 'La Reina', 'Las Vueltas', 'Nombre de Jesús', 'Nueva Concepción', 'Nueva Trinidad', 'Ojos de Agua', 'Potonico', 'San Antonio de la Cruz', 'San Antonio Los Ranchos', 'San Fernando', 'San Francisco Lempa', 'San Francisco Morazán', 'San Ignacio', 'San Isidro Labrador', 'San José Cancasque', 'San José Las Flores', 'San Luis del Carmen', 'San Miguel de Mercedes', 'San Rafael', 'Santa Rita', 'Tejutla']
-        },
-        'Ahuachapán': {
-            'Zona Central': ['Ahuachapán', 'Apaneca', 'Atiquizaya', 'Concepción de Ataco', 'El Refugio', 'Guaymango', 'Jujutla', 'San Francisco Menéndez', 'San Lorenzo', 'San Pedro Puxtla', 'Tacuba', 'Turín']
-        },
-        'Cuscatlán': {
-            'Zona Central': ['Cojutepeque', 'Candelaria', 'El Carmen', 'El Rosario', 'Monte San Juan', 'Oratorio de Concepción', 'San Bartolomé Perulapía', 'San Cristóbal', 'San José Guayabal', 'San Pedro Perulapán', 'San Rafael Cedros', 'San Ramón', 'Santa Cruz Analquito', 'Santa Cruz Michapa', 'Suchitoto', 'Tenancingo']
-        },
-        'La Unión': {
-            'Zona Central': ['La Unión', 'Anamorós', 'Bolívar', 'Concepción de Oriente', 'Conchagua', 'El Carmen', 'El Sauce', 'Intipucá', 'Lislique', 'Meanguera del Golfo', 'Nueva Esparta', 'Pasaquina', 'Polorós', 'San Alejo', 'San José', 'Santa Rosa de Lima', 'Yayantique', 'Yucuaiquín']
-        },
-        'Morazán': {
-            'Zona Central': ['San Francisco Gotera', 'Arambala', 'Cacaopera', 'Chilanga', 'Corinto', 'Delicias de Concepción', 'El Divisadero', 'El Rosario', 'Gualococti', 'Guatajiagua', 'Joateca', 'Jocoaitique', 'Jocoro', 'Lolotiquillo', 'Meanguera', 'Osicala', 'Perquín', 'San Carlos', 'San Fernando', 'San Isidro', 'San Simón', 'Sensembra', 'Sociedad', 'Torola', 'Yamabal', 'Yoloaiquín']
-        },
-        'San Vicente': {
-            'Zona Central': ['San Vicente', 'Apastepeque', 'Guadalupe', 'San Cayetano Istepeque', 'San Esteban Catarina', 'San Ildefonso', 'San Lorenzo', 'San Sebastián', 'Santa Clara', 'Santo Domingo', 'Tecoluca', 'Tepetitán', 'Verapaz']
-        },
-        'Cabañas': {
-            'Zona Central': ['Sensuntepeque', 'Cinquera', 'Dolores', 'Guacotecti', 'Ilobasco', 'Jutiapa', 'San Isidro', 'Tejutepeque', 'Victoria']
-        }
-    };
+    // Inicializar sistema geográfico centralizado
+    Geografia.inicializar({
+        departamentoId: 'departamento',
+        municipioId: 'municipio',
+        distritoId: 'distrito'
+    });
 
     // Actualizar formato según tipo de documento
     $('#tipo_documento').on('change', function() {
@@ -342,38 +291,6 @@ $(document).ready(function() {
             default:
                 formatoDiv.html('');
                 $('#numero_documento').attr('placeholder', '');
-        }
-    });
-
-    // Cascada de ubicación geográfica
-    $('#departamento').on('change', function() {
-        const departamento = $(this).val();
-        const municipioSelect = $('#municipio');
-        const distritoSelect = $('#distrito');
-        
-        // Limpiar selects dependientes
-        municipioSelect.html('<option value="">Seleccione...</option>');
-        distritoSelect.html('<option value="">Seleccione primero la zona...</option>');
-        
-        if (departamento && geografiaElSalvador[departamento]) {
-            Object.keys(geografiaElSalvador[departamento]).forEach(zona => {
-                municipioSelect.append(`<option value="${zona}">${zona}</option>`);
-            });
-        }
-    });
-
-    $('#municipio').on('change', function() {
-        const departamento = $('#departamento').val();
-        const zona = $(this).val();
-        const distritoSelect = $('#distrito');
-        
-        // Limpiar select de distrito
-        distritoSelect.html('<option value="">Seleccione...</option>');
-        
-        if (departamento && zona && geografiaElSalvador[departamento][zona]) {
-            geografiaElSalvador[departamento][zona].forEach(distrito => {
-                distritoSelect.append(`<option value="${distrito}">${distrito}</option>`);
-            });
         }
     });
 
@@ -407,11 +324,6 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-
-    // Trigger inicial para cargar zonas si hay valor previo
-    if ($('#departamento').val()) {
-        $('#departamento').trigger('change');
-    }
 });
 </script>
 @endsection

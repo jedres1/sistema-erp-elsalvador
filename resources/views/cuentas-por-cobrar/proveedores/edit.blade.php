@@ -165,42 +165,40 @@
                                 <select class="form-select @error('departamento') is-invalid @enderror" 
                                         id="departamento" name="departamento">
                                     <option value="">Seleccione...</option>
-                                    <option value="San Salvador" {{ old('departamento', 'San Salvador') == 'San Salvador' ? 'selected' : '' }}>San Salvador</option>
-                                    <option value="La Libertad" {{ old('departamento', 'San Salvador') == 'La Libertad' ? 'selected' : '' }}>La Libertad</option>
-                                    <option value="Santa Ana" {{ old('departamento', 'San Salvador') == 'Santa Ana' ? 'selected' : '' }}>Santa Ana</option>
-                                    <option value="San Miguel" {{ old('departamento', 'San Salvador') == 'San Miguel' ? 'selected' : '' }}>San Miguel</option>
-                                    <option value="Usulután" {{ old('departamento', 'San Salvador') == 'Usulután' ? 'selected' : '' }}>Usulután</option>
-                                    <option value="Sonsonate" {{ old('departamento', 'San Salvador') == 'Sonsonate' ? 'selected' : '' }}>Sonsonate</option>
-                                    <option value="La Paz" {{ old('departamento', 'San Salvador') == 'La Paz' ? 'selected' : '' }}>La Paz</option>
-                                    <option value="Chalatenango" {{ old('departamento', 'San Salvador') == 'Chalatenango' ? 'selected' : '' }}>Chalatenango</option>
-                                    <option value="Ahuachapán" {{ old('departamento', 'San Salvador') == 'Ahuachapán' ? 'selected' : '' }}>Ahuachapán</option>
-                                    <option value="Cuscatlán" {{ old('departamento', 'San Salvador') == 'Cuscatlán' ? 'selected' : '' }}>Cuscatlán</option>
-                                    <option value="La Unión" {{ old('departamento', 'San Salvador') == 'La Unión' ? 'selected' : '' }}>La Unión</option>
-                                    <option value="Morazán" {{ old('departamento', 'San Salvador') == 'Morazán' ? 'selected' : '' }}>Morazán</option>
-                                    <option value="San Vicente" {{ old('departamento', 'San Salvador') == 'San Vicente' ? 'selected' : '' }}>San Vicente</option>
-                                    <option value="Cabañas" {{ old('departamento', 'San Salvador') == 'Cabañas' ? 'selected' : '' }}>Cabañas</option>
+                                    <option value="01" {{ old('departamento', '06') == '01' ? 'selected' : '' }}>01 - Ahuachapán</option>
+                                    <option value="02" {{ old('departamento', '06') == '02' ? 'selected' : '' }}>02 - Santa Ana</option>
+                                    <option value="03" {{ old('departamento', '06') == '03' ? 'selected' : '' }}>03 - Sonsonate</option>
+                                    <option value="04" {{ old('departamento', '06') == '04' ? 'selected' : '' }}>04 - Chalatenango</option>
+                                    <option value="05" {{ old('departamento', '06') == '05' ? 'selected' : '' }}>05 - La Libertad</option>
+                                    <option value="06" {{ old('departamento', '06') == '06' ? 'selected' : '' }}>06 - San Salvador</option>
+                                    <option value="07" {{ old('departamento', '06') == '07' ? 'selected' : '' }}>07 - Cuscatlán</option>
+                                    <option value="08" {{ old('departamento', '06') == '08' ? 'selected' : '' }}>08 - La Paz</option>
+                                    <option value="09" {{ old('departamento', '06') == '09' ? 'selected' : '' }}>09 - Cabañas</option>
+                                    <option value="10" {{ old('departamento', '06') == '10' ? 'selected' : '' }}>10 - San Vicente</option>
+                                    <option value="11" {{ old('departamento', '06') == '11' ? 'selected' : '' }}>11 - Usulután</option>
+                                    <option value="12" {{ old('departamento', '06') == '12' ? 'selected' : '' }}>12 - San Miguel</option>
+                                    <option value="13" {{ old('departamento', '06') == '13' ? 'selected' : '' }}>13 - Morazán</option>
+                                    <option value="14" {{ old('departamento', '06') == '14' ? 'selected' : '' }}>14 - La Unión</option>
                                 </select>
                                 @error('departamento')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label for="municipio" class="form-label">Zona Geográfica/Municipio</label>
+                                <label for="municipio" class="form-label">Municipio</label>
                                 <select class="form-select @error('municipio') is-invalid @enderror" 
                                         id="municipio" name="municipio">
                                     <option value="">Seleccione primero el departamento...</option>
-                                    <option value="Zona Metropolitana de San Salvador" {{ old('municipio', 'Zona Metropolitana de San Salvador') == 'Zona Metropolitana de San Salvador' ? 'selected' : '' }}>Zona Metropolitana de San Salvador</option>
                                 </select>
                                 @error('municipio')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label for="distrito" class="form-label">Distrito/Ciudad</label>
+                                <label for="distrito" class="form-label">Distrito</label>
                                 <select class="form-select @error('distrito') is-invalid @enderror" 
                                         id="distrito" name="distrito">
-                                    <option value="">Seleccione primero la zona...</option>
-                                    <option value="San Salvador" {{ old('distrito', 'San Salvador') == 'San Salvador' ? 'selected' : '' }}>San Salvador</option>
+                                    <option value="">Seleccione primero el municipio...</option>
                                 </select>
                                 @error('distrito')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -315,66 +313,23 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/geografia.js') }}"></script>
 <script>
-$(document).ready(function() {
-    // Datos geográficos de El Salvador (mismo que en create)
-    const geografiaElSalvador = {
-        'San Salvador': {
-            'Zona Metropolitana de San Salvador': ['San Salvador', 'Mejicanos', 'Soyapango', 'Delgado', 'Ilopango', 'San Marcos', 'Tonacatepeque', 'Ayutuxtepeque', 'Apopa', 'Nejapa', 'Cuscatancingo', 'San Martín'],
-            'Zona Norte de San Salvador': ['Aguilares', 'El Paisnal', 'Guazapa'],
-            'Zona Sur de San Salvador': ['Panchimalco', 'Rosario de Mora', 'San Antonio Abad', 'Candelaria', 'San Marcos', 'Escalón', 'Flor Blanca']
-        },
-        'La Libertad': {
-            'Zona Costera': ['La Libertad', 'Puerto de La Libertad', 'Tamanique', 'Teotepeque', 'Tepecoyo', 'Talnique'],
-            'Zona Central': ['Santa Tecla', 'Antiguo Cuscatlán', 'Huizúcar', 'Nuevo Cuscatlán'],
-            'Zona Norte': ['Quezaltepeque', 'San Pablo Tacachico', 'Jayaque', 'Sacacoyo', 'San José Villanueva']
-        },
-        'Santa Ana': {
-            'Zona Central de Santa Ana': ['Santa Ana', 'Coatepeque', 'El Congo'],
-            'Zona Norte': ['Chalchuapa', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santiago de la Frontera', 'Texistepeque'],
-            'Zona Sur': ['Candelaria de la Frontera', 'Santa Rosa Guachipilín', 'Casitas']
-        },
-        'San Miguel': {
-            'Zona Central': ['San Miguel', 'Carolina', 'Ciudad Barrios', 'Comacarán', 'Chapeltique', 'Nueva Guadalupe'],
-            'Zona Norte': ['Sesori', 'San Gerardo', 'Lolotique', 'Moncagua', 'Quelepa'],
-            'Zona Este': ['Chirilagua', 'San Jorge', 'Uluazapa']
-        },
-        'Usulután': {
-            'Zona Central': ['Usulután', 'Jucuapa', 'Concepción Batres', 'Santa Elena', 'Ereguayquín'],
-            'Zona Costera': ['Jiquilisco', 'Puerto El Triunfo', 'San Dionisio'],
-            'Zona Norte': ['Alegría', 'Berlín', 'Mercedes Umaña', 'Nueva Granada', 'Santiago de María', 'California', 'Tecapán', 'El Triunfo']
-        },
-        'Sonsonate': {
-            'Zona Central': ['Sonsonate', 'Armenia', 'Caluco', 'Izalco', 'Juayúa', 'Nahuizalco', 'Nahulingo', 'Salcoatitán', 'San Antonio del Monte', 'Santa Catarina Masahuat', 'Santa Isabel Ishuatán', 'Santo Domingo de Guzmán', 'Sonzacate'],
-            'Zona Costera': ['Acajutla', 'San Julián', 'Cuisnahuat'],
-            'Zona Norte': ['Santa Ana Tecla']
-        },
-        'La Paz': {
-            'Zona Central': ['Zacatecoluca', 'San Luis Talpa', 'San Pedro Masahuat', 'Tapalhuaca', 'San Emigdio', 'San Francisco Chinameca', 'Santiago Nonualco', 'Santa María Ostuma'],
-            'Zona Norte': ['Cuyultitán', 'El Rosario', 'Jerusalén', 'Mercedes La Ceiba', 'Olocuilta', 'Paraíso de Osorio', 'San Antonio Masahuat', 'San Juan Nonualco', 'San Juan Talpa', 'San Luis La Herradura', 'San Miguel Tepezontes', 'San Pedro Nonualco', 'San Rafael Obrajuelo']
-        },
-        'Chalatenango': {
-            'Zona Central': ['Chalatenango', 'Agua Caliente', 'Arcatao', 'Azacualpa', 'Comalapa', 'Concepción Quezaltepeque', 'Dulce Nombre de María', 'El Carrizal', 'El Paraíso', 'La Laguna', 'La Palma', 'La Reina', 'Las Vueltas', 'Nombre de Jesús', 'Nueva Concepción', 'Nueva Trinidad', 'Ojos de Agua', 'Potonico', 'San Antonio de la Cruz', 'San Antonio Los Ranchos', 'San Fernando', 'San Francisco Lempa', 'San Francisco Morazán', 'San Ignacio', 'San Isidro Labrador', 'San José Cancasque', 'San José Las Flores', 'San Luis del Carmen', 'San Miguel de Mercedes', 'San Rafael', 'Santa Rita', 'Tejutla']
-        },
-        'Ahuachapán': {
-            'Zona Central': ['Ahuachapán', 'Apaneca', 'Atiquizaya', 'Concepción de Ataco', 'El Refugio', 'Guaymango', 'Jujutla', 'San Francisco Menéndez', 'San Lorenzo', 'San Pedro Puxtla', 'Tacuba', 'Turín']
-        },
-        'Cuscatlán': {
-            'Zona Central': ['Cojutepeque', 'Candelaria', 'El Carmen', 'El Rosario', 'Monte San Juan', 'Oratorio de Concepción', 'San Bartolomé Perulapía', 'San Cristóbal', 'San José Guayabal', 'San Pedro Perulapán', 'San Rafael Cedros', 'San Ramón', 'Santa Cruz Analquito', 'Santa Cruz Michapa', 'Suchitoto', 'Tenancingo']
-        },
-        'La Unión': {
-            'Zona Central': ['La Unión', 'Anamorós', 'Bolívar', 'Concepción de Oriente', 'Conchagua', 'El Carmen', 'El Sauce', 'Intipucá', 'Lislique', 'Meanguera del Golfo', 'Nueva Esparta', 'Pasaquina', 'Polorós', 'San Alejo', 'San José', 'Santa Rosa de Lima', 'Yayantique', 'Yucuaiquín']
-        },
-        'Morazán': {
-            'Zona Central': ['San Francisco Gotera', 'Arambala', 'Cacaopera', 'Chilanga', 'Corinto', 'Delicias de Concepción', 'El Divisadero', 'El Rosario', 'Gualococti', 'Guatajiagua', 'Joateca', 'Jocoaitique', 'Jocoro', 'Lolotiquillo', 'Meanguera', 'Osicala', 'Perquín', 'San Carlos', 'San Fernando', 'San Isidro', 'San Simón', 'Sensembra', 'Sociedad', 'Torola', 'Yamabal', 'Yoloaiquín']
-        },
-        'San Vicente': {
-            'Zona Central': ['San Vicente', 'Apastepeque', 'Guadalupe', 'San Cayetano Istepeque', 'San Esteban Catarina', 'San Ildefonso', 'San Lorenzo', 'San Sebastián', 'Santa Clara', 'Santo Domingo', 'Tecoluca', 'Tepetitán', 'Verapaz']
-        },
-        'Cabañas': {
-            'Zona Central': ['Sensuntepeque', 'Cinquera', 'Dolores', 'Guacotecti', 'Ilobasco', 'Jutiapa', 'San Isidro', 'Tejutepeque', 'Victoria']
+// Initialize geographic data module
+document.addEventListener('DOMContentLoaded', function() {
+    Geografia.inicializar({
+        departamentoId: 'departamento',
+        municipioId: 'municipio',
+        distritoId: 'distrito',
+        valoresActuales: {
+            departamento: '{{ $proveedor->departamento }}',
+            municipio: '{{ $proveedor->municipio }}',
+            distrito: '{{ $proveedor->distrito }}'
         }
-    };
+    });
+});
+
+$(document).ready(function() {
 
     // Actualizar formato según tipo de documento
     $('#tipo_documento').on('change', function() {
@@ -401,48 +356,6 @@ $(document).ready(function() {
             default:
                 formatoDiv.html('');
                 $('#numero_documento').attr('placeholder', '');
-        }
-    });
-
-    // Cascada de ubicación geográfica
-    $('#departamento').on('change', function() {
-        const departamento = $(this).val();
-        const municipioSelect = $('#municipio');
-        const distritoSelect = $('#distrito');
-        const municipioActual = '{{ old("municipio", "Zona Metropolitana de San Salvador") }}';
-        const distritoActual = '{{ old("distrito", "San Salvador") }}';
-        
-        // Limpiar selects dependientes
-        municipioSelect.html('<option value="">Seleccione...</option>');
-        distritoSelect.html('<option value="">Seleccione primero la zona...</option>');
-        
-        if (departamento && geografiaElSalvador[departamento]) {
-            Object.keys(geografiaElSalvador[departamento]).forEach(zona => {
-                const selected = zona === municipioActual ? 'selected' : '';
-                municipioSelect.append(`<option value="${zona}" ${selected}>${zona}</option>`);
-            });
-            
-            // Trigger change para cargar distritos si hay zona seleccionada
-            if (municipioActual) {
-                municipioSelect.trigger('change');
-            }
-        }
-    });
-
-    $('#municipio').on('change', function() {
-        const departamento = $('#departamento').val();
-        const zona = $(this).val();
-        const distritoSelect = $('#distrito');
-        const distritoActual = '{{ old("distrito", "San Salvador") }}';
-        
-        // Limpiar select de distrito
-        distritoSelect.html('<option value="">Seleccione...</option>');
-        
-        if (departamento && zona && geografiaElSalvador[departamento][zona]) {
-            geografiaElSalvador[departamento][zona].forEach(distrito => {
-                const selected = distrito === distritoActual ? 'selected' : '';
-                distritoSelect.append(`<option value="${distrito}" ${selected}>${distrito}</option>`);
-            });
         }
     });
 
@@ -476,9 +389,6 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-
-    // Cargar inicial para los selects en cascada
-    $('#departamento').trigger('change');
 });
 </script>
 @endsection

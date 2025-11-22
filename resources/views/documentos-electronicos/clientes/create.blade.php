@@ -148,7 +148,7 @@
                             <div class="col-md-4">
                                 <label for="departamento" class="form-label">Departamento <span class="text-danger">*</span></label>
                                 <select class="form-select @error('departamento') is-invalid @enderror" 
-                                        id="departamento" name="departamento" required onchange="cargarMunicipios()">
+                                        id="departamento" name="departamento" required>
                                     <option value="">Seleccionar departamento...</option>
                                     <option value="Ahuachapán" {{ old('departamento') == 'Ahuachapán' ? 'selected' : '' }}>Ahuachapán</option>
                                     <option value="Cabañas" {{ old('departamento') == 'Cabañas' ? 'selected' : '' }}>Cabañas</option>
@@ -172,7 +172,7 @@
                             <div class="col-md-4">
                                 <label for="municipio" class="form-label">Municipio <span class="text-danger">*</span></label>
                                 <select class="form-select @error('municipio') is-invalid @enderror" 
-                                        id="municipio" name="municipio" required onchange="cargarDistritos()">
+                                        id="municipio" name="municipio" required>
                                     <option value="">Seleccionar municipio...</option>
                                 </select>
                                 @error('municipio')
@@ -292,72 +292,16 @@
     </div>
 </div>
 
+<script src="{{ asset('js/geografia.js') }}"></script>
 <script>
-// Datos geográficos de El Salvador
-const municipiosPorDepartamento = {
-    'Ahuachapán': ['Ahuachapán', 'Apaneca', 'Atiquizaya', 'Concepción de Ataco', 'El Refugio', 'Guaymango', 'Jujutla', 'San Francisco Menéndez', 'San Lorenzo', 'San Pedro Puxtla', 'Tacuba', 'Turín'],
-    'Cabañas': ['Sensuntepeque', 'Cinquera', 'Dolores', 'Guacotecti', 'Ilobasco', 'Jutiapa', 'San Isidro', 'Tejutepeque', 'Victoria'],
-    'Chalatenango': ['Chalatenango', 'Agua Caliente', 'Arcatao', 'Azacualpa', 'Cancasque', 'Citalá', 'Comalapa', 'Concepción Quezaltepeque', 'Dulce Nombre de María', 'El Carrizal', 'El Paraíso', 'La Laguna', 'La Palma', 'La Reina', 'Las Vueltas', 'Nombre de Jesús', 'Nueva Concepción', 'Nueva Trinidad', 'Ojos de Agua', 'Potonico', 'San Antonio de la Cruz', 'San Antonio Los Ranchos', 'San Fernando', 'San Francisco Lempa', 'San Francisco Morazán', 'San Ignacio', 'San Isidro Labrador', 'San Luis del Carmen', 'San Miguel de Mercedes', 'San Rafael', 'Santa Rita', 'Tejutla'],
-    'Cuscatlán': ['Cojutepeque', 'Candelaria', 'El Carmen', 'El Rosario', 'Monte San Juan', 'Oratorio de Concepción', 'San Bartolomé Perulapía', 'San Cristóbal', 'San José Guayabal', 'San Pedro Perulapán', 'San Rafael Cedros', 'San Ramón', 'Santa Cruz Analquito', 'Santa Cruz Michapa', 'Suchitoto', 'Tenancingo'],
-    'La Libertad': ['Santa Tecla', 'Antiguo Cuscatlán', 'Nuevo Cuscatlán', 'San Juan Opico', 'Colón', 'Jayaque', 'Sacacoyo', 'Tepecoyo', 'Talnique', 'Comasagua', 'Huizúcar', 'Chiltiupán', 'Jicalapa', 'La Libertad', 'Tamanique', 'Teotepeque', 'Quezaltepeque', 'San Matías', 'San Pablo Tacachico', 'San José Villanueva', 'Zaragoza', 'Ciudad Arce'],
-    'La Paz': ['Zacatecoluca', 'Cuyultitán', 'El Rosario', 'Jerusalén', 'Mercedes La Ceiba', 'Olocuilta', 'Paraíso de Osorio', 'San Antonio Masahuat', 'San Emigdio', 'San Francisco Chinameca', 'San Juan Nonualco', 'San Juan Talpa', 'San Juan Tepezontes', 'San Luis La Herradura', 'San Luis Talpa', 'San Miguel Tepezontes', 'San Pedro Masahuat', 'San Pedro Nonualco', 'San Rafael Obrajuelo', 'Santa María Ostuma', 'Santiago Nonualco', 'Tapalhuaca'],
-    'La Unión': ['La Unión', 'Anamorós', 'Bolívar', 'Concepción de Oriente', 'Conchagua', 'El Carmen', 'El Sauce', 'Intipucá', 'Lislique', 'Meanguera del Golfo', 'Nueva Esparta', 'Pasaquina', 'Polorós', 'San Alejo', 'San José', 'Santa Rosa de Lima', 'Yayantique', 'Yucuaiquín'],
-    'Morazán': ['San Francisco Gotera', 'Arambala', 'Cacaopera', 'Chilanga', 'Corinto', 'Delicias de Concepción', 'El Divisadero', 'El Rosario', 'Gualococti', 'Guatajiagua', 'Joateca', 'Jocoaitique', 'Jocoro', 'Lolotiquillo', 'Meanguera', 'Osicala', 'Perquín', 'San Carlos', 'San Fernando', 'San Isidro', 'San Simón', 'Sensembra', 'Sociedad', 'Torola', 'Yamabal', 'Yoloaiquín'],
-    'San Miguel': ['San Miguel', 'Carolina', 'Chapeltique', 'Chinameca', 'Chirilagua', 'Ciudad Barrios', 'Comacarán', 'El Tránsito', 'Lolotique', 'Moncagua', 'Nueva Guadalupe', 'Nuevo Edén de San Juan', 'Quelepa', 'San Antonio', 'San Gerardo', 'San Jorge', 'San Luis de la Reina', 'San Rafael Oriente', 'Sesori', 'Uluazapa'],
-    'San Salvador': ['San Salvador', 'Aguilares', 'Apopa', 'Ayutuxtepeque', 'Ciudad Delgado', 'Cuscatancingo', 'El Paisnal', 'Guazapa', 'Ilopango', 'Mejicanos', 'Nejapa', 'Panchimalco', 'Rosario de Mora', 'San Marcos', 'San Martín', 'Santiago Texacuangos', 'Santo Tomás', 'Soyapango', 'Tonacatepeque'],
-    'San Vicente': ['San Vicente', 'Apastepeque', 'Guadalupe', 'San Cayetano Istepeque', 'San Esteban Catarina', 'San Ildefonso', 'San Lorenzo', 'San Sebastián', 'Santa Clara', 'Santo Domingo', 'Tecoluca', 'Tepetitán', 'Verapaz'],
-    'Santa Ana': ['Santa Ana', 'Candelaria de la Frontera', 'Chalchuapa', 'Coatepeque', 'El Congo', 'El Porvenir', 'Masahuat', 'Metapán', 'San Antonio Pajonal', 'San Sebastián Salitrillo', 'Santa Rosa Guachipilín', 'Santiago de la Frontera', 'Texistepeque'],
-    'Sonsonate': ['Sonsonate', 'Acajutla', 'Armenia', 'Caluco', 'Cuisnahuat', 'Izalco', 'Juayúa', 'Nahuizalco', 'Nahulingo', 'Salcoatitán', 'San Antonio del Monte', 'San Julián', 'Santa Catarina Masahuat', 'Santa Isabel Ishuatán', 'Santo Domingo de Guzmán', 'Sonzacate'],
-    'Usulután': ['Usulután', 'Alegría', 'Berlín', 'California', 'Concepción Batres', 'El Triunfo', 'Ereguayquín', 'Estanzuelas', 'Jiquilisco', 'Jucuapa', 'Jucuarán', 'Mercedes Umaña', 'Nueva Granada', 'Ozatlán', 'Puerto El Triunfo', 'San Agustín', 'San Buenaventura', 'San Dionisio', 'San Francisco Javier', 'Santa Elena', 'Santa María', 'Santiago de María', 'Tecapán']
-};
-
-const distritosPorMunicipio = {
-    'San Salvador': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro Histórico'],
-    'Santa Tecla': ['Centro', 'Norte', 'Sur', 'Las Colinas', 'Santa Cruz'],
-    'Santa Ana': ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
-    'San Miguel': ['Centro', 'Norte', 'Sur', 'Zona Industrial'],
-    'Soyapango': ['Centro', 'Norte', 'Sur', 'Planes de Renderos'],
-    'Mejicanos': ['Centro', 'Norte', 'Zona Industrial'],
-    'Apopa': ['Centro', 'Norte', 'Sur'],
-    'Antiguo Cuscatlán': ['Centro', 'La Mascota', 'Los Bosques'],
-    'Ilopango': ['Centro', 'Zona Industrial', 'Zona Franca']
-};
-
-function cargarMunicipios() {
-    const departamento = document.getElementById('departamento').value;
-    const municipioSelect = document.getElementById('municipio');
-    const distritoSelect = document.getElementById('distrito');
-    
-    // Limpiar municipios y distritos
-    municipioSelect.innerHTML = '<option value="">Seleccionar municipio...</option>';
-    distritoSelect.innerHTML = '<option value="">Seleccionar distrito...</option>';
-    
-    if (departamento && municipiosPorDepartamento[departamento]) {
-        municipiosPorDepartamento[departamento].forEach(municipio => {
-            const option = document.createElement('option');
-            option.value = municipio;
-            option.textContent = municipio;
-            municipioSelect.appendChild(option);
-        });
-    }
-}
-
-function cargarDistritos() {
-    const municipio = document.getElementById('municipio').value;
-    const distritoSelect = document.getElementById('distrito');
-    
-    // Limpiar distritos
-    distritoSelect.innerHTML = '<option value="">Seleccionar distrito...</option>';
-    
-    if (municipio && distritosPorMunicipio[municipio]) {
-        distritosPorMunicipio[municipio].forEach(distrito => {
-            const option = document.createElement('option');
-            option.value = distrito;
-            option.textContent = distrito;
-            distritoSelect.appendChild(option);
-        });
-    }
-}
+// Inicializar selectores geográficos
+document.addEventListener('DOMContentLoaded', function() {
+    Geografia.inicializar({
+        departamentoId: 'departamento',
+        municipioId: 'municipio',
+        distritoId: 'distrito'
+    });
+});
 
 // Formatear DUI mientras se escribe
 document.getElementById('dui').addEventListener('input', function(e) {
