@@ -241,7 +241,7 @@
 
 <script>
 function confirmarEliminacion(clienteId) {
-    document.getElementById('formEliminar').action = `/documentos-electronicos/clientes/${clienteId}`;
+    document.getElementById('formEliminar').action = `/clientes/${clienteId}`;
     new bootstrap.Modal(document.getElementById('modalEliminar')).show();
 }
 
