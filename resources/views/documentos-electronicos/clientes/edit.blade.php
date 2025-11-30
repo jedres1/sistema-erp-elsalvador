@@ -93,16 +93,21 @@
                                 @enderror
                             </div>
                             <div class="col-12 mt-3">
-                                <label for="giro" class="form-label">Actividad Económica / Giro Comercial <span class="text-danger">*</span></label>
-                                <select class="form-select @error('giro') is-invalid @enderror" 
-                                        id="giro" name="giro" required>
-                                    <option value="">Seleccione una actividad económica...</option>
-                                </select>
+                                <label for="giro_search" class="form-label">Actividad Económica / Giro Comercial <span class="text-danger">*</span></label>
+                                <div class="position-relative">
+                                    <input type="text" 
+                                           class="form-control @error('giro') is-invalid @enderror" 
+                                           id="giro_search" 
+                                           placeholder="Buscar por código o descripción de actividad económica..."
+                                           autocomplete="off">
+                                    <input type="hidden" id="giro" name="giro" value="{{ old('giro', $cliente->giro) }}" required>
+                                    <div id="giro_results" class="list-group position-absolute w-100" style="max-height: 300px; overflow-y: auto; z-index: 1000; display: none;"></div>
+                                </div>
                                 @error('giro')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text">
-                                    <i class="fas fa-search"></i> Escriba para buscar la actividad económica
+                                    <i class="fas fa-search"></i> Escriba al menos 2 caracteres para buscar por código o descripción
                                 </div>
                             </div>
                         </div>
@@ -287,30 +292,63 @@
 <script>
 // Cargar actividades económicas
 let actividadesEconomicas = [];
+const valorActual = '{{ old("giro", $cliente->giro) }}';
 
 async function cargarActividadesEconomicas() {
     try {
         const response = await fetch('/js/actividades-economicas.json');
         actividadesEconomicas = await response.json();
-        const select = document.getElementById('giro');
-        const valorActual = '{{ old("giro", $cliente->giro) }}';
         
-        actividadesEconomicas.forEach(actividad => {
-            const option = document.createElement('option');
-            option.value = actividad.codigo;
-            option.textContent = `${actividad.codigo} - ${actividad.descripcion}`;
-            option.setAttribute('data-descripcion', actividad.descripcion.toLowerCase());
-            
-            // Preseleccionar si coincide con el valor actual
-            if (actividad.codigo === valorActual || actividad.descripcion === valorActual) {
-                option.selected = true;
-            }
-            
-            select.appendChild(option);
-        });
+        // Preseleccionar valor actual
+        const actividadActual = actividadesEconomicas.find(a => a.codigo === valorActual);
+        if (actividadActual) {
+            document.getElementById('giro_search').value = `${actividadActual.codigo} - ${actividadActual.descripcion}`;
+        }
     } catch (error) {
         console.error('Error cargando actividades económicas:', error);
     }
+}
+
+// Función de búsqueda de actividades económicas
+function buscarActividadesEconomicas(query) {
+    if (query.length < 2) return [];
+    
+    const searchTerm = query.toLowerCase();
+    return actividadesEconomicas.filter(actividad => {
+        const codigo = actividad.codigo.toLowerCase();
+        const descripcion = actividad.descripcion.toLowerCase();
+        return codigo.includes(searchTerm) || descripcion.includes(searchTerm);
+    }).slice(0, 50); // Limitar a 50 resultados
+}
+
+function mostrarResultados(resultados) {
+    const resultsDiv = document.getElementById('giro_results');
+    resultsDiv.innerHTML = '';
+    
+    if (resultados.length === 0) {
+        resultsDiv.style.display = 'none';
+        return;
+    }
+    
+    resultados.forEach(actividad => {
+        const item = document.createElement('a');
+        item.href = '#';
+        item.className = 'list-group-item list-group-item-action';
+        item.innerHTML = `<strong>${actividad.codigo}</strong> - ${actividad.descripcion}`;
+        item.onclick = function(e) {
+            e.preventDefault();
+            seleccionarActividad(actividad);
+        };
+        resultsDiv.appendChild(item);
+    });
+    
+    resultsDiv.style.display = 'block';
+}
+
+function seleccionarActividad(actividad) {
+    document.getElementById('giro_search').value = `${actividad.codigo} - ${actividad.descripcion}`;
+    document.getElementById('giro').value = actividad.codigo;
+    document.getElementById('giro_results').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -329,31 +367,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar actividades económicas
     cargarActividadesEconomicas();
     
-    // Añadir funcionalidad de búsqueda en select de giro
-    const giroSelect = document.getElementById('giro');
-    giroSelect.addEventListener('focus', function() {
-        this.size = 8;
+    // Configurar buscador de actividades económicas
+    const giroSearch = document.getElementById('giro_search');
+    
+    giroSearch.addEventListener('input', function(e) {
+        const query = e.target.value;
+        const resultados = buscarActividadesEconomicas(query);
+        mostrarResultados(resultados);
     });
     
-    giroSelect.addEventListener('blur', function() {
-        setTimeout(() => { this.size = 1; }, 200);
+    giroSearch.addEventListener('blur', function() {
+        setTimeout(() => {
+            document.getElementById('giro_results').style.display = 'none';
+        }, 200);
     });
     
-    giroSelect.addEventListener('keyup', function(e) {
-        const searchText = e.target.value.toLowerCase();
-        const options = Array.from(this.options);
-        
-        options.forEach(option => {
-            if (option.value === '') return;
-            const text = option.textContent.toLowerCase();
-            const descripcion = option.getAttribute('data-descripcion') || '';
-            
-            if (text.includes(searchText) || descripcion.includes(searchText)) {
-                option.style.display = '';
-            } else {
-                option.style.display = 'none';
-            }
-        });
+    giroSearch.addEventListener('focus', function() {
+        if (this.value.length >= 2) {
+            const resultados = buscarActividadesEconomicas(this.value);
+            mostrarResultados(resultados);
+        }
     });
 
     // Formatear DUI mientras se escribe
