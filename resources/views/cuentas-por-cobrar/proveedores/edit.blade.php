@@ -191,22 +191,7 @@
                             <div class="col-md-4">
                                 <label for="departamento" class="form-label">Departamento</label>
                                 <select class="form-select @error('departamento') is-invalid @enderror" 
-                                        id="departamento" name="departamento">
-                                    <option value="">Seleccione...</option>
-                                    <option value="01" {{ old('departamento', '06') == '01' ? 'selected' : '' }}>01 - Ahuachapán</option>
-                                    <option value="02" {{ old('departamento', '06') == '02' ? 'selected' : '' }}>02 - Santa Ana</option>
-                                    <option value="03" {{ old('departamento', '06') == '03' ? 'selected' : '' }}>03 - Sonsonate</option>
-                                    <option value="04" {{ old('departamento', '06') == '04' ? 'selected' : '' }}>04 - Chalatenango</option>
-                                    <option value="05" {{ old('departamento', '06') == '05' ? 'selected' : '' }}>05 - La Libertad</option>
-                                    <option value="06" {{ old('departamento', '06') == '06' ? 'selected' : '' }}>06 - San Salvador</option>
-                                    <option value="07" {{ old('departamento', '06') == '07' ? 'selected' : '' }}>07 - Cuscatlán</option>
-                                    <option value="08" {{ old('departamento', '06') == '08' ? 'selected' : '' }}>08 - La Paz</option>
-                                    <option value="09" {{ old('departamento', '06') == '09' ? 'selected' : '' }}>09 - Cabañas</option>
-                                    <option value="10" {{ old('departamento', '06') == '10' ? 'selected' : '' }}>10 - San Vicente</option>
-                                    <option value="11" {{ old('departamento', '06') == '11' ? 'selected' : '' }}>11 - Usulután</option>
-                                    <option value="12" {{ old('departamento', '06') == '12' ? 'selected' : '' }}>12 - San Miguel</option>
-                                    <option value="13" {{ old('departamento', '06') == '13' ? 'selected' : '' }}>13 - Morazán</option>
-                                    <option value="14" {{ old('departamento', '06') == '14' ? 'selected' : '' }}>14 - La Unión</option>
+                                    id="departamento" name="departamento">
                                 </select>
                                 @error('departamento')
                                     <div class="invalid-feedback">{{ $message }}</div>
