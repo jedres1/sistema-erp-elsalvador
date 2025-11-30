@@ -93,13 +93,17 @@
                                 @enderror
                             </div>
                             <div class="col-12 mt-3">
-                                <label for="giro" class="form-label">Giro Comercial <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('giro') is-invalid @enderror" 
-                                       id="giro" name="giro" value="{{ old('giro', $cliente->giro) }}" 
-                                       placeholder="Actividad principal del cliente" required>
+                                <label for="giro" class="form-label">Actividad Económica / Giro Comercial <span class="text-danger">*</span></label>
+                                <select class="form-select @error('giro') is-invalid @enderror" 
+                                        id="giro" name="giro" required>
+                                    <option value="">Seleccione una actividad económica...</option>
+                                </select>
                                 @error('giro')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                <div class="form-text">
+                                    <i class="fas fa-search"></i> Escriba para buscar la actividad económica
+                                </div>
                             </div>
                         </div>
 
@@ -281,6 +285,34 @@
 
 <script src="{{ asset('js/geografia.js') }}"></script>
 <script>
+// Cargar actividades económicas
+let actividadesEconomicas = [];
+
+async function cargarActividadesEconomicas() {
+    try {
+        const response = await fetch('/js/actividades-economicas.json');
+        actividadesEconomicas = await response.json();
+        const select = document.getElementById('giro');
+        const valorActual = '{{ old("giro", $cliente->giro) }}';
+        
+        actividadesEconomicas.forEach(actividad => {
+            const option = document.createElement('option');
+            option.value = actividad.codigo;
+            option.textContent = `${actividad.codigo} - ${actividad.descripcion}`;
+            option.setAttribute('data-descripcion', actividad.descripcion.toLowerCase());
+            
+            // Preseleccionar si coincide con el valor actual
+            if (actividad.codigo === valorActual || actividad.descripcion === valorActual) {
+                option.selected = true;
+            }
+            
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error cargando actividades económicas:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar sistema geográfico centralizado
     Geografia.inicializar({
@@ -292,6 +324,36 @@ document.addEventListener('DOMContentLoaded', function() {
             municipio: '{{ $cliente->municipio }}',
             distrito: '{{ $cliente->distrito }}'
         }
+    });
+    
+    // Cargar actividades económicas
+    cargarActividadesEconomicas();
+    
+    // Añadir funcionalidad de búsqueda en select de giro
+    const giroSelect = document.getElementById('giro');
+    giroSelect.addEventListener('focus', function() {
+        this.size = 8;
+    });
+    
+    giroSelect.addEventListener('blur', function() {
+        setTimeout(() => { this.size = 1; }, 200);
+    });
+    
+    giroSelect.addEventListener('keyup', function(e) {
+        const searchText = e.target.value.toLowerCase();
+        const options = Array.from(this.options);
+        
+        options.forEach(option => {
+            if (option.value === '') return;
+            const text = option.textContent.toLowerCase();
+            const descripcion = option.getAttribute('data-descripcion') || '';
+            
+            if (text.includes(searchText) || descripcion.includes(searchText)) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        });
     });
 
     // Formatear DUI mientras se escribe
